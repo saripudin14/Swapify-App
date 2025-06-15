@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<StackPane prefHeight="600.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.MainDashboardController">
+   <children>
+      <BorderPane style="-fx-background-color: #f4f6f9;">
+         
+         <top>
+            <BorderPane prefHeight="70.0" style="-fx-background-color: #212529; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);">
+               
+               <left>
+                  <Label text="Katalog Swapify" style="-fx-text-fill: #f8f9fa;" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                     <BorderPane.margin>
+                        <Insets left="30.0" />
+                     </BorderPane.margin>
+                  </Label>
+               </left>
+               <right>
+                  <Button fx:id="profileButton" text="P" onAction="#handleProfileAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 50; -fx-background-color: #495057; -fx-text-fill: #f8f9fa; -fx-cursor: hand;" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <BorderPane.margin>
+                        <Insets right="30.0" />
+                     </BorderPane.margin>
+                  </Button>
+               </right>
+            </BorderPane>
+         </top>
+
+         <center>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" BorderPane.alignment="CENTER">
+               <content>
+                  <TilePane fx:id="itemCatalogPane" prefColumns="4" hgap="20.0" vgap="20.0" style="-fx-background-color: transparent;">
+                     <padding>
+                        <Insets top="20.0" right="30.0" bottom="20.0" left="30.0" />
+                     </padding>
+                  </TilePane>
+               </content>
+            </ScrollPane>
+         </center>
+      </BorderPane>
+
+      <Button fx:id="tambahBarangButton" text="+" onAction="#handleTambahBarangAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: #1877F2; -fx-text-fill: white; -fx-background-radius: 50; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 4); -fx-cursor: hand;" StackPane.alignment="BOTTOM_RIGHT">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+         <StackPane.margin>
+            <Insets bottom="25.0" right="25.0" />
+         </StackPane.margin>
+      </Button>
+   </children>
+</StackPane>

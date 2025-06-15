@@ -37,13 +37,29 @@ public class LoginController {
 
         if (userDAO.loginUser(email, password)) {
             showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Login sukses! Selamat datang.");
-            // Nanti di sini kita akan pindah ke halaman utama aplikasi
+            
+            try {
+                // 1. Tutup jendela login
+                Stage loginStage = (Stage) emailField.getScene().getWindow();
+                loginStage.close();
+
+                // 2. Buka jendela dashboard utama
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("MainDashboardView.fxml"));
+                Parent root = loader.load();
+                Stage dashboardStage = new Stage();
+                dashboardStage.setTitle("Swapify - Beranda");
+                dashboardStage.setScene(new Scene(root));
+                dashboardStage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         } else {
             showAlert(Alert.AlertType.ERROR, "Gagal", "Email atau password salah.");
         }
-    }
+    } // <-- KURUNG KURAWAL PENUTUP YANG HILANG, DITAMBAHKAN DI SINI
 
-    // Ini adalah versi yang benar, yang duplikat sudah dihapus
     @FXML
     private void handleRegisterLinkAction() {
         try {
@@ -64,11 +80,11 @@ public class LoginController {
         }
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) { // Parameter bernama 'message'
+    private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message); // Variabel yang digunakan di sini juga 'message'. Sekarang sudah cocok!
+        alert.setContentText(message);
         alert.showAndWait();
     }
 }

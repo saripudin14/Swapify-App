@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="280.0" prefWidth="190.0" spacing="8.0" styleClass="item-card" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.ItemCardController">
+   <children>
+      <ImageView fx:id="itemImageView" fitHeight="140.0" fitWidth="190.0" pickOnBounds="true" preserveRatio="true" styleClass="item-image-view" />
+      
+      <Label fx:id="itemNameLabel" text="Nama Barang Sangat Panjang Sekali" wrapText="true">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="itemCategoryLabel" style="-fx-text-fill: grey;" text="Kategori Barang" />
+      
+      <Label fx:id="uploaderNameLabel" text="oleh: Nama Pengunggah" style="-fx-font-size: 11px; -fx-text-fill: #606770;">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </Label>
+      <Label fx:id="itemTypeLabel" style="-fx-background-color: #e0e0e0; -fx-background-radius: 5; -fx-padding: 2 8 2 8;" text="Jenis Transaksi">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      
+      <Region VBox.vgrow="ALWAYS" />
+      
+      <Button fx:id="detailButton" mnemonicParsing="false" onAction="#handleDetailAction" prefWidth="170.0" styleClass="detail-button" text="Lihat Detail" />
+   </children>
+   <padding>
+      <Insets bottom="10.0" />
+   </padding>
+   
+   <stylesheets>
+      <URL value="@styles.css" />
+   </stylesheets>
+</VBox>

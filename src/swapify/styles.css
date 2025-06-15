@@ -1,0 +1,33 @@
+/* Gaya dasar untuk setiap kartu barang */
+.item-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+    -fx-transition: all 0.2s ease-in-out; /* Menambahkan transisi halus */
+}
+
+/* Efek saat mouse berada di atas kartu */
+.item-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 4);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+/* Membuat sudut gambar menjadi tumpul */
+.item-image-view {
+    -fx-background-radius: 8 8 0 0; /* Hanya sudut atas */
+    -fx-border-radius: 8 8 0 0;
+}
+
+/* Gaya untuk tombol detail */
+.detail-button {
+    -fx-background-color: #E4E6EB;
+    -fx-text-fill: #050505;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand; /* Mengubah kursor menjadi tangan saat hover */
+}
+
+.detail-button:hover {
+    -fx-background-color: #D8DADF;
+}
