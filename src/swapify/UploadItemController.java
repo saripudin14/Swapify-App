@@ -32,7 +32,7 @@ public class UploadItemController implements Initializable {
     @FXML
     private Button unggahButton;
     @FXML
-    private Label formTitleLabel; // Pastikan variabel ini ada
+    private Label formTitleLabel;
 
     private File selectedImageFile;
     private ItemDAO itemDAO;
@@ -51,10 +51,8 @@ public class UploadItemController implements Initializable {
     public void initData(Item item) {
         this.itemToEdit = item;
         
-        // --- PERUBAHAN VISUAL UNTUK MODE EDIT ---
-        formTitleLabel.setText("Edit Barang"); // Mengubah judul form
-        unggahButton.setText("Simpan Perubahan"); // Mengubah teks tombol
-        // -----------------------------------------
+        formTitleLabel.setText("Edit Barang");
+        unggahButton.setText("Simpan Perubahan");
         
         namaBarangField.setText(item.getNamaBarang());
         deskripsiArea.setText(item.getDeskripsi());
@@ -69,15 +67,66 @@ public class UploadItemController implements Initializable {
 
     @FXML
     private void handlePilihGambar() {
-        // ... (metode ini tidak berubah) ...
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Pilih Gambar Barang");
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("File Gambar", "*.png", "*.jpg", "*.jpeg")
+        );
+        Stage stage = (Stage) pilihGambarButton.getScene().getWindow();
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            selectedImageFile = file;
+            namaFileGambarLabel.setText(file.getName());
+        }
     }
 
     @FXML
     private void handleUnggahBarang() {
-        // ... (metode ini tidak berubah) ...
+        String namaBarang = namaBarangField.getText();
+        String deskripsi = deskripsiArea.getText();
+        String kategori = kategoriComboBox.getValue();
+        String jenisTransaksi = jenisTransaksiComboBox.getValue();
+
+        if (namaBarang.isEmpty() || deskripsi.isEmpty() || kategori == null || jenisTransaksi == null || selectedImageFile == null) {
+            showAlert(Alert.AlertType.ERROR, "Input Tidak Lengkap", "Semua kolom dan gambar wajib diisi.");
+            return;
+        }
+
+        String gambarPath = selectedImageFile.getAbsolutePath();
+        boolean success;
+
+        if (itemToEdit == null) {
+            // Mode Tambah Baru
+            int currentUserId = 1; // ID pengguna yang sedang login (sementara di-hardcode)
+            success = itemDAO.addItem(namaBarang, deskripsi, kategori, jenisTransaksi, gambarPath, currentUserId);
+            
+            if (success) {
+                showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Barang baru telah berhasil diunggah.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Gagal", "Terjadi kesalahan saat mengunggah barang.");
+            }
+        } else {
+            // Mode Edit
+            success = itemDAO.updateItem(itemToEdit.getId(), namaBarang, deskripsi, kategori, jenisTransaksi, gambarPath);
+            
+            if (success) {
+                showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Perubahan pada barang telah berhasil disimpan.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Gagal", "Terjadi kesalahan saat menyimpan perubahan.");
+            }
+        }
+
+        if (success) {
+            Stage stage = (Stage) unggahButton.getScene().getWindow();
+            stage.close();
+        }
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
-        // ... (metode ini tidak berubah) ...
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

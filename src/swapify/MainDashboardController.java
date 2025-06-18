@@ -27,11 +27,11 @@ public class MainDashboardController implements Initializable {
     private Button profileButton;
 
     private ItemDAO itemDAO;
-    private UserDAO userDAO; // Tambahkan UserDAO
+    private UserDAO userDAO;
 
     public MainDashboardController() {
         itemDAO = new ItemDAO();
-        userDAO = new UserDAO(); // Inisialisasi UserDAO
+        userDAO = new UserDAO();
     }
 
     @Override
@@ -39,32 +39,32 @@ public class MainDashboardController implements Initializable {
         loadItems();
     }
     
-    // --- METODE INI YANG KITA PERBARUI ---
     @FXML
     private void handleProfileAction() {
-        // PENTING: Untuk sekarang, kita hardcode ID user yang sedang login.
-        // Di aplikasi nyata, ini akan didapat setelah proses login.
+        // ID pengguna yang sedang login (sementara di-hardcode)
         int loggedInUserId = 1; 
 
         User user = userDAO.getUserById(loggedInUserId);
 
         if (user != null) {
             try {
-                // 1. Memuat FXML halaman profil
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ProfileView.fxml"));
                 Parent root = loader.load();
 
-                // 2. Mengambil controller dari halaman profil yang baru dimuat
                 ProfileController profileController = loader.getController();
-                
-                // 3. Mengirim data 'user' ke ProfileController
                 profileController.initData(user);
 
-                // 4. Menampilkan jendela profil
                 Stage profileStage = new Stage();
                 profileStage.setTitle("Profil Pengguna - " + user.getNama());
                 profileStage.setScene(new Scene(root));
-                profileStage.show();
+                
+                // --- PERUBAHAN DI SINI ---
+                // Menggunakan showAndWait() agar dashboard menunggu jendela profil ditutup
+                profileStage.showAndWait();
+
+                // Setelah profil ditutup, refresh item di dashboard
+                loadItems();
+                // -------------------------
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -83,7 +83,8 @@ public class MainDashboardController implements Initializable {
             uploadStage.setTitle("Unggah Barang Baru");
             uploadStage.setScene(new Scene(root));
             uploadStage.showAndWait();
-            loadItems();
+            // Refresh item setelah jendela tambah barang ditutup
+            loadItems(); 
         } catch (IOException e) {
             e.printStackTrace();
         }
