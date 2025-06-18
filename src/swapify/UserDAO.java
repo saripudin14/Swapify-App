@@ -45,7 +45,6 @@ public class UserDAO {
         }
     }
 
-    // --- METODE BARU UNTUK HALAMAN PROFIL DITAMBAHKAN DI SINI ---
     public User getUserById(int userId) {
         String sql = "SELECT * FROM users WHERE id = ?";
         User user = null;
@@ -57,12 +56,37 @@ public class UserDAO {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                // Menggunakan constructor baru yang sudah kita siapkan di User.java
                 user = new User(
                     rs.getInt("id"),
                     rs.getString("nama"),
                     rs.getString("email"),
                     rs.getString("password")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    // --- METODE BARU UNTUK MENGAMBIL USER BERDASARKAN EMAIL ---
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+        User user = null;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User(
+                    rs.getInt("id"),
+                    rs.getString("nama"),
+                    rs.getString("email"),
+                    rs.getString("password") 
                 );
             }
 

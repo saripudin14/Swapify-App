@@ -96,8 +96,15 @@ public class UploadItemController implements Initializable {
         boolean success;
 
         if (itemToEdit == null) {
+            // --- PERUBAHAN UTAMA DI SINI ---
             // Mode Tambah Baru
-            int currentUserId = 1; // ID pengguna yang sedang login (sementara di-hardcode)
+            User loggedInUser = UserSession.getInstance().getLoggedInUser();
+            if (loggedInUser == null) {
+                showAlert(Alert.AlertType.ERROR, "Error Sesi", "Sesi pengguna tidak ditemukan. Silakan login ulang.");
+                return;
+            }
+            // Ambil ID dari pengguna yang sedang login
+            int currentUserId = loggedInUser.getId(); 
             success = itemDAO.addItem(namaBarang, deskripsi, kategori, jenisTransaksi, gambarPath, currentUserId);
             
             if (success) {
@@ -106,7 +113,7 @@ public class UploadItemController implements Initializable {
                 showAlert(Alert.AlertType.ERROR, "Gagal", "Terjadi kesalahan saat mengunggah barang.");
             }
         } else {
-            // Mode Edit
+            // Mode Edit (tidak ada perubahan di sini)
             success = itemDAO.updateItem(itemToEdit.getId(), namaBarang, deskripsi, kategori, jenisTransaksi, gambarPath);
             
             if (success) {

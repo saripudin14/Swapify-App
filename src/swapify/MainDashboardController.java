@@ -2,6 +2,7 @@ package swapify;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -22,9 +24,9 @@ public class MainDashboardController implements Initializable {
     @FXML
     private TextField searchField;
     @FXML
-    private Button tambahBarangButton;
-    @FXML
     private Button profileButton;
+    @FXML
+    private Button logoutButton;
 
     private ItemDAO itemDAO;
     private UserDAO userDAO;
@@ -38,56 +40,71 @@ public class MainDashboardController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         loadItems();
     }
-    
+
+    @FXML
+    private void handleLogoutAction() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Konfirmasi Logout");
+        alert.setHeaderText("Anda akan keluar dari sesi ini.");
+        alert.setContentText("Apakah Anda yakin ingin logout?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // --- PERUBAHAN DI SINI ---
+            // 1. Hapus data sesi pengguna
+            UserSession.getInstance().clearSession();
+
+            try {
+                // 2. Tutup jendela dashboard saat ini
+                Stage currentStage = (Stage) logoutButton.getScene().getWindow();
+                currentStage.close();
+
+                // 3. Buka kembali jendela login
+                Parent root = FXMLLoader.load(getClass().getResource("LoginView.fxml"));
+                Stage loginStage = new Stage();
+                loginStage.setTitle("Swapify - Login");
+                loginStage.setScene(new Scene(root, 400, 350));
+                loginStage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @FXML
     private void handleProfileAction() {
-        // ID pengguna yang sedang login (sementara di-hardcode)
-        int loggedInUserId = 1; 
+        // --- PERUBAHAN DI SINI ---
+        // Mengambil data pengguna dari sesi, bukan hardcode
+        User loggedInUser = UserSession.getInstance().getLoggedInUser();
 
-        User user = userDAO.getUserById(loggedInUserId);
-
-        if (user != null) {
+        if (loggedInUser != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ProfileView.fxml"));
                 Parent root = loader.load();
 
                 ProfileController profileController = loader.getController();
-                profileController.initData(user);
+                // Mengirim objek pengguna yang benar-benar login
+                profileController.initData(loggedInUser, this);
 
                 Stage profileStage = new Stage();
-                profileStage.setTitle("Profil Pengguna - " + user.getNama());
+                // Menggunakan nama pengguna dari sesi untuk judul jendela
+                profileStage.setTitle("Profil Pengguna - " + loggedInUser.getNama());
                 profileStage.setScene(new Scene(root));
-                
-                // --- PERUBAHAN DI SINI ---
-                // Menggunakan showAndWait() agar dashboard menunggu jendela profil ditutup
                 profileStage.showAndWait();
-
-                // Setelah profil ditutup, refresh item di dashboard
+                
                 loadItems();
-                // -------------------------
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            showAlert("Error", "Pengguna Tidak Ditemukan", "Tidak dapat menemukan data untuk pengguna dengan ID: " + loggedInUserId);
+            showAlert("Error", "Sesi Tidak Ditemukan", "Tidak dapat menemukan data pengguna yang login. Silakan coba login kembali.");
         }
     }
 
-    @FXML
-    private void handleTambahBarangAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("UploadItemView.fxml"));
-            Parent root = loader.load();
-            Stage uploadStage = new Stage();
-            uploadStage.setTitle("Unggah Barang Baru");
-            uploadStage.setScene(new Scene(root));
-            uploadStage.showAndWait();
-            // Refresh item setelah jendela tambah barang ditutup
-            loadItems(); 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void refreshItems() {
+        loadItems();
     }
 
     private void loadItems() {

@@ -6,6 +6,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -38,19 +40,33 @@
    <center>
       <VBox>
          <children>
-             <Label text="Barang yang Saya Unggah">
-                 <font><Font name="System Bold" size="20.0" /></font>
-                 <VBox.margin><Insets left="30.0" top="20.0" bottom="10.0" /></VBox.margin>
-             </Label>
-             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
-                <content>
-                   <TilePane fx:id="myItemsPane" hgap="20.0" vgap="20.0" style="-fx-background-color: transparent;">
-                      <padding>
-                         <Insets bottom="20.0" left="30.0" right="30.0" top="10.0" />
-                      </padding>
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+               <children>
+                  <Label text="Barang yang Saya Unggah">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Button fx:id="tambahBarangButton" mnemonicParsing="false" onAction="#handleTambahBarangAction" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;" text="+ Tambah Barang Baru">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="30.0" right="30.0" top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+               <content>
+                  <TilePane fx:id="myItemsPane" hgap="20.0" vgap="20.0" style="-fx-background-color: transparent;">
+                     <padding>
+                        <Insets bottom="20.0" left="30.0" right="30.0" top="10.0" />
+                     </padding>
                   </TilePane>
-                </content>
-             </ScrollPane>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </center>

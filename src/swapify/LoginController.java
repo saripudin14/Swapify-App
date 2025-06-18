@@ -21,7 +21,6 @@ public class LoginController {
     private UserDAO userDAO;
 
     public LoginController() {
-        // Menggunakan kembali DAO yang sudah Anda buat!
         userDAO = new UserDAO();
     }
 
@@ -36,14 +35,25 @@ public class LoginController {
         }
 
         if (userDAO.loginUser(email, password)) {
-            showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Login sukses! Selamat datang.");
+            // --- PERUBAHAN UTAMA DIMULAI DI SINI ---
+            
+            // 1. Ambil data lengkap user dari database menggunakan email
+            User loggedInUser = userDAO.getUserByEmail(email);
+
+            // 2. Simpan objek User ke dalam UserSession
+            UserSession.getInstance().setLoggedInUser(loggedInUser);
+
+            // 3. Tampilkan pesan selamat datang yang dipersonalisasi
+            showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Login sukses! Selamat datang, " + loggedInUser.getNama() + ".");
+            
+            // --- AKHIR DARI PERUBAHAN ---
             
             try {
-                // 1. Tutup jendela login
+                // Tutup jendela login
                 Stage loginStage = (Stage) emailField.getScene().getWindow();
                 loginStage.close();
 
-                // 2. Buka jendela dashboard utama
+                // Buka jendela dashboard utama
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainDashboardView.fxml"));
                 Parent root = loader.load();
                 Stage dashboardStage = new Stage();
@@ -58,23 +68,17 @@ public class LoginController {
         } else {
             showAlert(Alert.AlertType.ERROR, "Gagal", "Email atau password salah.");
         }
-    } // <-- KURUNG KURAWAL PENUTUP YANG HILANG, DITAMBAHKAN DI SINI
+    }
 
     @FXML
     private void handleRegisterLinkAction() {
         try {
-            // Memuat file FXML untuk register
             FXMLLoader loader = new FXMLLoader(getClass().getResource("RegisterView.fxml"));
             Parent root = loader.load();
-
-            // Membuat stage (jendela) baru
             Stage registerStage = new Stage();
             registerStage.setTitle("Registrasi Akun Baru");
             registerStage.setScene(new Scene(root));
-            
-            // Menampilkan jendela register dan menunggu sampai ditutup
             registerStage.showAndWait();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
