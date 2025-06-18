@@ -32,20 +32,15 @@ public class ProfileController {
         itemDAO = new ItemDAO();
     }
     
-    // Metode ini akan dipanggil dari MainDashboardController untuk mengirim data user
     public void initData(User user) {
         if (user != null) {
             namaLengkapLabel.setText(user.getNama());
             emailLabel.setText(user.getEmail());
-            // Logika untuk menampilkan foto profil bisa ditambahkan di sini nanti
-            
-            // Memuat barang-barang milik user ini
             loadUserItems(user.getId());
         }
     }
 
     private void loadUserItems(int userId) {
-        // Logika ini hampir sama persis dengan yang ada di MainDashboardController
         ObservableList<Item> userItems = itemDAO.getItemsByUserId(userId);
         myItemsPane.getChildren().clear();
 
@@ -56,6 +51,11 @@ public class ProfileController {
 
                 ItemCardController itemCardController = loader.getController();
                 itemCardController.setData(item);
+                itemCardController.showOwnerControls();
+                
+                // --- INI BARIS KUNCI YANG DITAMBAHKAN ---
+                // Memberikan "perintah" untuk me-refresh halaman ini jika item dihapus
+                itemCardController.setOnDeleteCallback(() -> loadUserItems(userId));
 
                 myItemsPane.getChildren().add(itemCardNode);
             } catch (IOException e) {

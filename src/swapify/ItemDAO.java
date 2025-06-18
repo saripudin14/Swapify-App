@@ -62,16 +62,14 @@ public class ItemDAO {
         }
     }
 
-    // --- METODE BARU UNTUK HALAMAN PROFIL DITAMBAHKAN DI SINI ---
     public ObservableList<Item> getItemsByUserId(int userId) {
         ObservableList<Item> itemList = FXCollections.observableArrayList();
-        // Query ini sama dengan getAllAvailableItems, tapi difilter berdasarkan user_id
         String sql = "SELECT i.*, u.nama as nama_uploader FROM items i JOIN users u ON i.user_id = u.id WHERE i.user_id = ? ORDER BY i.created_at DESC";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, userId); // Mengisi placeholder '?' dengan ID pengguna yang dicari
+            pstmt.setInt(1, userId);
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
@@ -93,5 +91,24 @@ public class ItemDAO {
             e.printStackTrace();
         }
         return itemList;
+    }
+
+    // --- METODE BARU UNTUK MENGHAPUS BARANG DITAMBAHKAN DI SINI ---
+    public boolean deleteItemById(int itemId) {
+        String sql = "DELETE FROM items WHERE id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, itemId);
+            
+            int affectedRows = pstmt.executeUpdate();
+            
+            return affectedRows > 0; // Mengembalikan true jika berhasil menghapus
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
