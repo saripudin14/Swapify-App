@@ -93,7 +93,6 @@ public class ItemDAO {
         return itemList;
     }
 
-    // --- METODE BARU UNTUK MENGHAPUS BARANG DITAMBAHKAN DI SINI ---
     public boolean deleteItemById(int itemId) {
         String sql = "DELETE FROM items WHERE id = ?";
         
@@ -101,10 +100,32 @@ public class ItemDAO {
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, itemId);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // --- METODE BARU UNTUK MENGEDIT BARANG DITAMBAHKAN DI SINI ---
+    public boolean updateItem(int itemId, String namaBarang, String deskripsi, String kategori, String jenisTransaksi, String gambarPath) {
+        String sql = "UPDATE items SET nama_barang = ?, deskripsi = ?, kategori = ?, jenis_transaksi = ?, gambar_path = ? WHERE id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, namaBarang);
+            pstmt.setString(2, deskripsi);
+            pstmt.setString(3, kategori);
+            pstmt.setString(4, jenisTransaksi);
+            pstmt.setString(5, gambarPath);
+            pstmt.setInt(6, itemId); // id untuk klausa WHERE
             
             int affectedRows = pstmt.executeUpdate();
             
-            return affectedRows > 0; // Mengembalikan true jika berhasil menghapus
+            return affectedRows > 0; // Mengembalikan true jika berhasil memperbarui
             
         } catch (SQLException e) {
             e.printStackTrace();

@@ -93,3 +93,18 @@
 -fx-text-fill: white;
 
 }
+
+/* Tambahkan kode ini di styles.css */
+
+.edit-button {
+    -fx-background-color: #f0f2f5; /* Warna abu-abu netral */
+    -fx-background-radius: 50; /* Membuatnya bulat sempurna */
+    -fx-text-fill: #606770;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.edit-button:hover {
+    -fx-background-color: #0d6efd; /* Warna biru saat disentuh mouse */
+    -fx-text-fill: white;
+}

@@ -15,7 +15,7 @@
       <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
    </padding>
    <children>
-      <Label text="Unggah Barang Baru">
+      <Label fx:id="formTitleLabel" text="Unggah Barang Baru">
          <font>
             <Font name="System Bold" size="24.0" />
          </font>

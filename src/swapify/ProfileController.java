@@ -53,9 +53,9 @@ public class ProfileController {
                 itemCardController.setData(item);
                 itemCardController.showOwnerControls();
                 
-                // --- INI BARIS KUNCI YANG DITAMBAHKAN ---
-                // Memberikan "perintah" untuk me-refresh halaman ini jika item dihapus
-                itemCardController.setOnDeleteCallback(() -> loadUserItems(userId));
+                // --- INI BARIS YANG DIPERBARUI ---
+                // Mengganti nama metode callback agar sesuai dengan ItemCardController
+                itemCardController.setOnUpdateCallback(() -> loadUserItems(userId));
 
                 myItemsPane.getChildren().add(itemCardNode);
             } catch (IOException e) {
