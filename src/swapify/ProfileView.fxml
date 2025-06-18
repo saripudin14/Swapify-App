@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #f4f6f9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.ProfileController">
+   <left>
+      <VBox alignment="TOP_CENTER" prefWidth="250.0" spacing="10.0" style="-fx-background-color: #ffffff; -fx-border-color: #e0e0e0; -fx-border-width: 0 1 0 0;">
+         <padding>
+            <Insets top="30.0" />
+         </padding>
+         <children>
+            <ImageView fx:id="profileImageView" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="namaLengkapLabel" text="Nama Lengkap Pengguna">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+            <Label fx:id="emailLabel" text="email.pengguna@mail.com" style="-fx-text-fill: grey;" />
+            <Button fx:id="editProfileButton" mnemonicParsing="false" onAction="#handleEditProfile" style="-fx-cursor: hand;" text="Edit Profil">
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox>
+         <children>
+             <Label text="Barang yang Saya Unggah">
+                 <font><Font name="System Bold" size="20.0" /></font>
+                 <VBox.margin><Insets left="30.0" top="20.0" bottom="10.0" /></VBox.margin>
+             </Label>
+             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                <content>
+                   <TilePane fx:id="myItemsPane" hgap="20.0" vgap="20.0" style="-fx-background-color: transparent;">
+                      <padding>
+                         <Insets bottom="20.0" left="30.0" right="30.0" top="10.0" />
+                      </padding>
+                  </TilePane>
+                </content>
+             </ScrollPane>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

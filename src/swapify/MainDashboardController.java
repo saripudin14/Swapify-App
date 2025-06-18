@@ -27,9 +27,11 @@ public class MainDashboardController implements Initializable {
     private Button profileButton;
 
     private ItemDAO itemDAO;
+    private UserDAO userDAO; // Tambahkan UserDAO
 
     public MainDashboardController() {
         itemDAO = new ItemDAO();
+        userDAO = new UserDAO(); // Inisialisasi UserDAO
     }
 
     @Override
@@ -37,47 +39,59 @@ public class MainDashboardController implements Initializable {
         loadItems();
     }
     
+    // --- METODE INI YANG KITA PERBARUI ---
     @FXML
     private void handleProfileAction() {
-        System.out.println("Tombol 'Profil' diklik!");
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Informasi");
-        alert.setHeaderText(null);
-        alert.setContentText("Fitur untuk melihat profil akan dibuat selanjutnya.");
-        alert.showAndWait();
+        // PENTING: Untuk sekarang, kita hardcode ID user yang sedang login.
+        // Di aplikasi nyata, ini akan didapat setelah proses login.
+        int loggedInUserId = 1; 
+
+        User user = userDAO.getUserById(loggedInUserId);
+
+        if (user != null) {
+            try {
+                // 1. Memuat FXML halaman profil
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("ProfileView.fxml"));
+                Parent root = loader.load();
+
+                // 2. Mengambil controller dari halaman profil yang baru dimuat
+                ProfileController profileController = loader.getController();
+                
+                // 3. Mengirim data 'user' ke ProfileController
+                profileController.initData(user);
+
+                // 4. Menampilkan jendela profil
+                Stage profileStage = new Stage();
+                profileStage.setTitle("Profil Pengguna - " + user.getNama());
+                profileStage.setScene(new Scene(root));
+                profileStage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            showAlert("Error", "Pengguna Tidak Ditemukan", "Tidak dapat menemukan data untuk pengguna dengan ID: " + loggedInUserId);
+        }
     }
 
-    // --- METODE INI YANG DIPERBARUI ---
     @FXML
     private void handleTambahBarangAction() {
         try {
-            // 1. Memuat file FXML untuk jendela upload
             FXMLLoader loader = new FXMLLoader(getClass().getResource("UploadItemView.fxml"));
             Parent root = loader.load();
-
-            // 2. Membuat stage (jendela) baru untuk form upload
             Stage uploadStage = new Stage();
             uploadStage.setTitle("Unggah Barang Baru");
             uploadStage.setScene(new Scene(root));
-            
-            // 3. Menampilkan jendela dan menunggu sampai jendela tersebut ditutup
             uploadStage.showAndWait();
-            
-            // 4. Setelah jendela ditutup, muat ulang item di katalog
-            //    agar barang yang baru ditambahkan langsung muncul.
             loadItems();
-
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert("Error", "Gagal Membuka Form", "Terjadi kesalahan saat mencoba membuka form unggah barang.");
         }
     }
 
     private void loadItems() {
-        // Metode ini tidak berubah, tetap seperti sebelumnya
         ObservableList<Item> availableItems = itemDAO.getAllAvailableItems();
         itemCatalogPane.getChildren().clear();
-
         for (Item item : availableItems) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemCard.fxml"));
@@ -91,7 +105,6 @@ public class MainDashboardController implements Initializable {
         }
     }
     
-    // Metode bantuan untuk menampilkan notifikasi error jika diperlukan
     private void showAlert(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

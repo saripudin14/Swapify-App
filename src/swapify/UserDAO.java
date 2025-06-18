@@ -1,23 +1,24 @@
 package swapify;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDAO {
-	public boolean registerUser(String nama, String email, String password) {
+    
+    public boolean registerUser(String nama, String email, String password) {
         String sql = "INSERT INTO users (nama, email, password) VALUES (?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, nama);
             pstmt.setString(2, email);
-            pstmt.setString(3, password); // Seharusnya password di-hash, tapi kita buat simpel dulu
+            pstmt.setString(3, password);
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
 
         } catch (SQLException e) {
-            // Error code 1062 adalah untuk duplicate entry (email sudah ada)
             if (e.getErrorCode() == 1062) {
                 System.out.println("Error: Email sudah terdaftar.");
             } else {
@@ -36,11 +37,38 @@ public class UserDAO {
             pstmt.setString(2, password);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                return rs.next(); // Jika ada baris data, berarti login berhasil
+                return rs.next();
             }
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // --- METODE BARU UNTUK HALAMAN PROFIL DITAMBAHKAN DI SINI ---
+    public User getUserById(int userId) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        User user = null;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                // Menggunakan constructor baru yang sudah kita siapkan di User.java
+                user = new User(
+                    rs.getInt("id"),
+                    rs.getString("nama"),
+                    rs.getString("email"),
+                    rs.getString("password")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 }
