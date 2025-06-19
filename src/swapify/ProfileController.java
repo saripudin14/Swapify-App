@@ -24,22 +24,24 @@ public class ProfileController {
     @FXML
     private Button editProfileButton;
     @FXML
-    private Button tambahBarangButton; // Tombol FXML baru ditambahkan
-
+    private Button tambahBarangButton;
     @FXML
     private TilePane myItemsPane;
+    
+    // --- FIELD BARU UNTUK TOMBOL KEMBALI ---
+    @FXML
+    private Button backButton;
 
     private UserDAO userDAO;
     private ItemDAO itemDAO;
-    private User currentUser; // Menyimpan data user yang sedang login
-    private MainDashboardController dashboardController; // Referensi ke controller dashboard
+    private User currentUser;
+    private MainDashboardController dashboardController;
 
     public ProfileController() {
         userDAO = new UserDAO();
         itemDAO = new ItemDAO();
     }
 
-    // Metode initData diperbarui untuk menerima referensi MainDashboardController
     public void initData(User user, MainDashboardController controller) {
         this.currentUser = user;
         this.dashboardController = controller;
@@ -48,6 +50,14 @@ public class ProfileController {
             emailLabel.setText(currentUser.getEmail());
             loadUserItems(currentUser.getId());
         }
+    }
+
+    // --- METODE BARU UNTUK TOMBOL KEMBALI ---
+    @FXML
+    private void handleBackButtonAction() {
+        // Mengambil stage (jendela) dari tombol dan menutupnya
+        Stage stage = (Stage) backButton.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
@@ -59,9 +69,8 @@ public class ProfileController {
             Stage uploadStage = new Stage();
             uploadStage.setTitle("Unggah Barang Baru");
             uploadStage.setScene(new Scene(root));
-            uploadStage.showAndWait(); // Menunggu jendela upload ditutup
+            uploadStage.showAndWait();
             
-            // Setelah ditutup, refresh daftar barang di halaman profil & dashboard
             loadUserItems(currentUser.getId());
             if (dashboardController != null) {
                 dashboardController.refreshItems();
@@ -85,7 +94,6 @@ public class ProfileController {
                 itemCardController.setData(item);
                 itemCardController.showOwnerControls();
                 
-                // Callback diperbarui untuk me-refresh dashboard juga
                 itemCardController.setOnUpdateCallback(() -> {
                     loadUserItems(userId);
                     if (dashboardController != null) {
