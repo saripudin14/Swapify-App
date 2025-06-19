@@ -19,10 +19,14 @@ public class MainApp extends Application {
         primaryStage.setTitle("Swapify - Login");
         
         // 3. Menetapkan scene (tampilan) ke dalam stage (window)
-        // Anda bisa mengatur ukuran default window di sini (lebar, tinggi)
-        primaryStage.setScene(new Scene(root, 400, 350));
+        // Ukuran manual 400x350 dihapus dari sini
+        primaryStage.setScene(new Scene(root));
         
-        // 4. Menampilkan window ke layar
+        // --- PERUBAHAN DI SINI ---
+        // 4. Mengatur agar jendela langsung berukuran maksimal
+        primaryStage.setMaximized(true);
+        
+        // 5. Menampilkan window ke layar
         primaryStage.show();
     }
 

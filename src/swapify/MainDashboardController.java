@@ -50,20 +50,18 @@ public class MainDashboardController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // --- PERUBAHAN DI SINI ---
-            // 1. Hapus data sesi pengguna
             UserSession.getInstance().clearSession();
-
             try {
-                // 2. Tutup jendela dashboard saat ini
                 Stage currentStage = (Stage) logoutButton.getScene().getWindow();
                 currentStage.close();
-
-                // 3. Buka kembali jendela login
                 Parent root = FXMLLoader.load(getClass().getResource("LoginView.fxml"));
                 Stage loginStage = new Stage();
                 loginStage.setTitle("Swapify - Login");
-                loginStage.setScene(new Scene(root, 400, 350));
+
+                // --- PERUBAHAN DI SINI ---
+                loginStage.setScene(new Scene(root)); // Ukuran manual dihapus
+                loginStage.setMaximized(true);      // Jendela diatur ke mode maksimal
+
                 loginStage.show();
 
             } catch (IOException e) {
@@ -74,8 +72,6 @@ public class MainDashboardController implements Initializable {
 
     @FXML
     private void handleProfileAction() {
-        // --- PERUBAHAN DI SINI ---
-        // Mengambil data pengguna dari sesi, bukan hardcode
         User loggedInUser = UserSession.getInstance().getLoggedInUser();
 
         if (loggedInUser != null) {
@@ -84,13 +80,12 @@ public class MainDashboardController implements Initializable {
                 Parent root = loader.load();
 
                 ProfileController profileController = loader.getController();
-                // Mengirim objek pengguna yang benar-benar login
                 profileController.initData(loggedInUser, this);
 
                 Stage profileStage = new Stage();
-                // Menggunakan nama pengguna dari sesi untuk judul jendela
                 profileStage.setTitle("Profil Pengguna - " + loggedInUser.getNama());
                 profileStage.setScene(new Scene(root));
+                profileStage.setMaximized(true);
                 profileStage.showAndWait();
                 
                 loadItems();

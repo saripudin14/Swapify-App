@@ -35,30 +35,23 @@ public class LoginController {
         }
 
         if (userDAO.loginUser(email, password)) {
-            // --- PERUBAHAN UTAMA DIMULAI DI SINI ---
-            
-            // 1. Ambil data lengkap user dari database menggunakan email
             User loggedInUser = userDAO.getUserByEmail(email);
-
-            // 2. Simpan objek User ke dalam UserSession
             UserSession.getInstance().setLoggedInUser(loggedInUser);
-
-            // 3. Tampilkan pesan selamat datang yang dipersonalisasi
             showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Login sukses! Selamat datang, " + loggedInUser.getNama() + ".");
             
-            // --- AKHIR DARI PERUBAHAN ---
-            
             try {
-                // Tutup jendela login
                 Stage loginStage = (Stage) emailField.getScene().getWindow();
                 loginStage.close();
 
-                // Buka jendela dashboard utama
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainDashboardView.fxml"));
                 Parent root = loader.load();
                 Stage dashboardStage = new Stage();
                 dashboardStage.setTitle("Swapify - Beranda");
                 dashboardStage.setScene(new Scene(root));
+                
+                // --- PERUBAHAN DI SINI ---
+                dashboardStage.setMaximized(true); // Memaksimalkan jendela dashboard
+                
                 dashboardStage.show();
 
             } catch (IOException e) {
@@ -78,6 +71,10 @@ public class LoginController {
             Stage registerStage = new Stage();
             registerStage.setTitle("Registrasi Akun Baru");
             registerStage.setScene(new Scene(root));
+            
+            // --- PERUBAHAN DI SINI ---
+            registerStage.setMaximized(true); // Memaksimalkan jendela registrasi
+            
             registerStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();
