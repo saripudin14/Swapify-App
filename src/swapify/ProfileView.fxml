@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="600.0" prefWidth="850.0" style="-fx-background-color: #f4f6f9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.ProfileController">
@@ -26,10 +27,14 @@
             </HBox>
             
             <ImageView fx:id="profileImageView" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
+               <clip>
+                  <Circle radius="60" centerX="60" centerY="60" />
+               </clip>
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin>
             </ImageView>
+            
             <Label fx:id="namaLengkapLabel" text="Nama Lengkap Pengguna">
                <font>
                   <Font name="System Bold" size="18.0" />

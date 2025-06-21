@@ -1,5 +1,6 @@
 package swapify;
 
+import java.io.File;
 import java.io.IOException;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -27,8 +29,6 @@ public class ProfileController {
     private Button tambahBarangButton;
     @FXML
     private TilePane myItemsPane;
-    
-    // --- FIELD BARU UNTUK TOMBOL KEMBALI ---
     @FXML
     private Button backButton;
 
@@ -48,14 +48,33 @@ public class ProfileController {
         if (currentUser != null) {
             namaLengkapLabel.setText(currentUser.getNama());
             emailLabel.setText(currentUser.getEmail());
+            
+            // --- PERUBAHAN DI SINI ---
+            // Memanggil metode untuk memuat foto profil
+            loadProfileImage(currentUser.getProfileImagePath());
+            
             loadUserItems(currentUser.getId());
         }
     }
+    
+    // --- METODE BARU UNTUK MEMUAT FOTO PROFIL ---
+    private void loadProfileImage(String imagePath) {
+        if (imagePath != null && !imagePath.isEmpty()) {
+            File imageFile = new File(imagePath);
+            if (imageFile.exists()) {
+                Image image = new Image(imageFile.toURI().toString());
+                profileImageView.setImage(image);
+            } else {
+                System.err.println("File gambar profil tidak ditemukan di: " + imagePath);
+                profileImageView.setImage(null); // Atau set gambar default jika ada
+            }
+        } else {
+            profileImageView.setImage(null); // Atau set gambar default jika path kosong
+        }
+    }
 
-    // --- METODE BARU UNTUK TOMBOL KEMBALI ---
     @FXML
     private void handleBackButtonAction() {
-        // Mengambil stage (jendela) dari tombol dan menutupnya
         Stage stage = (Stage) backButton.getScene().getWindow();
         stage.close();
     }
@@ -69,6 +88,7 @@ public class ProfileController {
             Stage uploadStage = new Stage();
             uploadStage.setTitle("Unggah Barang Baru");
             uploadStage.setScene(new Scene(root));
+            uploadStage.setMaximized(true);
             uploadStage.showAndWait();
             
             loadUserItems(currentUser.getId());
@@ -110,10 +130,24 @@ public class ProfileController {
     
     @FXML
     private void handleEditProfile() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Informasi");
-        alert.setHeaderText(null);
-        alert.setContentText("Fitur Edit Profil akan dibuat selanjutnya!");
-        alert.showAndWait();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("EditProfileView.fxml"));
+            Parent root = loader.load();
+
+            EditProfileController editController = loader.getController();
+            editController.initData(currentUser);
+
+            Stage editStage = new Stage();
+            editStage.setTitle("Edit Profil");
+            editStage.setScene(new Scene(root));
+            editStage.showAndWait();
+
+            // --- PERUBAHAN DI SINI ---
+            // Setelah jendela edit ditutup, perbarui tampilan di halaman profil
+            namaLengkapLabel.setText(currentUser.getNama());
+            loadProfileImage(currentUser.getProfileImagePath()); // <-- REFRESH FOTO PROFIL
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -45,6 +45,7 @@ public class UserDAO {
         }
     }
 
+    // --- METODE DIPERBARUI UNTUK MEMBACA `profile_image_path` ---
     public User getUserById(int userId) {
         String sql = "SELECT * FROM users WHERE id = ?";
         User user = null;
@@ -60,7 +61,8 @@ public class UserDAO {
                     rs.getInt("id"),
                     rs.getString("nama"),
                     rs.getString("email"),
-                    rs.getString("password")
+                    rs.getString("password"),
+                    rs.getString("profile_image_path") // <-- Membaca kolom baru
                 );
             }
 
@@ -70,7 +72,7 @@ public class UserDAO {
         return user;
     }
 
-    // --- METODE BARU UNTUK MENGAMBIL USER BERDASARKAN EMAIL ---
+    // --- METODE DIPERBARUI UNTUK MEMBACA `profile_image_path` ---
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ?";
         User user = null;
@@ -86,7 +88,8 @@ public class UserDAO {
                     rs.getInt("id"),
                     rs.getString("nama"),
                     rs.getString("email"),
-                    rs.getString("password") 
+                    rs.getString("password"),
+                    rs.getString("profile_image_path") // <-- Membaca kolom baru
                 );
             }
 
@@ -94,5 +97,39 @@ public class UserDAO {
             e.printStackTrace();
         }
         return user;
+    }
+
+    // --- METODE DIPERBARUI UNTUK MENG-UPDATE NAMA, PASSWORD, DAN FOTO PROFIL ---
+    public boolean updateUserProfile(int userId, String newName, String newPassword, String profileImagePath) {
+        // Membangun query SQL secara dinamis
+        StringBuilder sql = new StringBuilder("UPDATE users SET nama = ?, profile_image_path = ?");
+        
+        boolean isPasswordChanged = newPassword != null && !newPassword.isEmpty();
+        if (isPasswordChanged) {
+            sql.append(", password = ?");
+        }
+        
+        sql.append(" WHERE id = ?");
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
+
+            int parameterIndex = 1;
+            pstmt.setString(parameterIndex++, newName);
+            pstmt.setString(parameterIndex++, profileImagePath);
+
+            if (isPasswordChanged) {
+                pstmt.setString(parameterIndex++, newPassword);
+            }
+            
+            pstmt.setInt(parameterIndex, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
