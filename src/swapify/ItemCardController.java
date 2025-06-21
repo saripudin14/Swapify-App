@@ -12,25 +12,29 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle; // Import diubah dari ImageView
 import javafx.stage.Stage;
 
 public class ItemCardController {
 
-    // ... (FXML fields tetap sama) ...
-    @FXML private ImageView itemImageView;
+    @FXML private Rectangle itemImageRectangle; // Tipe diubah menjadi Rectangle
+    
     @FXML private Label itemNameLabel;
     @FXML private Label itemCategoryLabel;
     @FXML private Label uploaderNameLabel;
     @FXML private Label itemTypeLabel;
+    @FXML private Label statusLabel;
     @FXML private Button detailButton;
+    @FXML private HBox ownerControlsBox;
     @FXML private Button deleteButton;
     @FXML private Button editButton;
+    @FXML private Button markAsDoneButton;
 
     private Item currentItem;
     private ItemDAO itemDAO;
-    
-    // Mengubah nama callback agar lebih umum (bisa untuk hapus/edit)
     private Runnable updateCallback;
 
     public ItemCardController() {
@@ -38,49 +42,109 @@ public class ItemCardController {
     }
 
     public void setData(Item item) {
-        // ... (Isi metode ini tetap sama) ...
         this.currentItem = item;
         itemNameLabel.setText(item.getNamaBarang());
-        itemCategoryLabel.setText(item.getKategori());
-        itemTypeLabel.setText(item.getJenisTransaksi());
+        itemCategoryLabel.setText("Kategori: " + item.getKategori());
         uploaderNameLabel.setText("oleh: " + item.getNamaUploader());
-        if ("Donasi".equals(item.getJenisTransaksi())) {
-            itemTypeLabel.setStyle("-fx-background-color: #DCEDC8; -fx-text-fill: #33691E; -fx-background-radius: 5; -fx-padding: 2 8 2 8;");
+        
+        applyTagStyles(item.getJenisTransaksi(), item.getStatus());
+        
+        String imagePath = item.getGambarPath();
+        if (imagePath != null && !imagePath.isEmpty()) {
+            File imageFile = new File(imagePath);
+            if (imageFile.exists()) {
+                // Menggunakan konstruktor canggih untuk kualitas terbaik
+                Image image = new Image(imageFile.toURI().toString(), 220, 160, true, true, true);
+                
+                image.progressProperty().addListener((obs, oldVal, newVal) -> {
+                    if (newVal.doubleValue() == 1.0) {
+                        itemImageRectangle.setFill(new ImagePattern(image));
+                    }
+                });
+                if (image.getProgress() == 1.0) {
+                    itemImageRectangle.setFill(new ImagePattern(image));
+                }
+
+            } else {
+                itemImageRectangle.setFill(Color.web("#e0e0e0"));
+            }
         } else {
-            itemTypeLabel.setStyle("-fx-background-color: #BBDEFB; -fx-text-fill: #0D47A1; -fx-background-radius: 5; -fx-padding: 2 8 2 8;");
+            itemImageRectangle.setFill(Color.web("#e0e0e0"));
         }
-        if (item.getGambarPath() != null && !item.getGambarPath().isEmpty()) {
-            try {
-                File file = new File(item.getGambarPath());
-                Image image = new Image(file.toURI().toString());
-                itemImageView.setImage(image);
-            } catch (Exception e) {
-                System.err.println("Gambar tidak dapat dimuat: " + item.getGambarPath());
+    }
+
+    private void applyTagStyles(String jenisTransaksi, String status) {
+        // Atur gaya untuk label status
+        if ("Tersedia".equals(status)) {
+            statusLabel.setText("● " + status); // Menambahkan ikon lingkaran
+            statusLabel.getStyleClass().setAll("tag", "tag-status-tersedia");
+            statusLabel.setVisible(true);
+            statusLabel.setManaged(true);
+        } else {
+            statusLabel.setVisible(false);
+            statusLabel.setManaged(false);
+        }
+        
+        // Atur gaya dan ikon untuk label jenis transaksi
+        itemTypeLabel.getStyleClass().setAll("tag"); 
+        if ("Donasi".equals(jenisTransaksi)) {
+            itemTypeLabel.setText("❤ " + jenisTransaksi); // Menambahkan ikon hati
+            itemTypeLabel.getStyleClass().add("tag-transaksi-donasi");
+        } else { // Asumsikan selain itu adalah "Tukar"
+            itemTypeLabel.setText("⇄ " + jenisTransaksi); // Menambahkan ikon tukar
+            itemTypeLabel.getStyleClass().add("tag-transaksi-tukar");
+        }
+    }
+    
+    // ... Sisa metode tidak berubah ...
+    public void showOwnerControls() {
+        ownerControlsBox.setVisible(true);
+        ownerControlsBox.setManaged(true);
+    }
+    
+    public void setOnUpdateCallback(Runnable callback) {
+        this.updateCallback = callback;
+    }
+    
+    @FXML
+    private void handleMarkAsDoneAction() {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmation.setTitle("Konfirmasi");
+        confirmation.setHeaderText("Tandai Barang sebagai Selesai");
+        confirmation.setContentText("Apakah Anda yakin ingin menyelesaikan transaksi untuk barang '" + currentItem.getNamaBarang() + "'? Barang ini akan disembunyikan dari daftar.");
+
+        Optional<ButtonType> result = confirmation.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            boolean success = itemDAO.updateItemStatus(currentItem.getId(), "Selesai");
+            if (success && updateCallback != null) {
+                updateCallback.run(); 
+            } else {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Gagal");
+                errorAlert.setContentText("Gagal memperbarui status barang.");
+                errorAlert.showAndWait();
             }
         }
     }
 
-    public void showOwnerControls() {
-        // ... (Isi metode ini tetap sama) ...
-        deleteButton.setVisible(true);
-        deleteButton.setManaged(true);
-        editButton.setVisible(true);
-        editButton.setManaged(true);
-    }
-    
-    // Mengubah nama metode callback
-    public void setOnUpdateCallback(Runnable callback) {
-        this.updateCallback = callback;
-    }
-
     @FXML
     private void handleDetailAction() {
-        System.out.println("Tombol detail diklik untuk item: " + currentItem.getNamaBarang());
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemDetailView.fxml"));
+            Parent root = loader.load();
+            ItemDetailController detailController = loader.getController();
+            detailController.initData(currentItem);
+            Stage detailStage = new Stage();
+            detailStage.setTitle("Detail Barang - " + currentItem.getNamaBarang());
+            detailStage.setScene(new Scene(root));
+            detailStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void handleDeleteAction() {
-        // ... (Isi metode ini tetap sama, hanya memanggil updateCallback) ...
         Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationAlert.setTitle("Konfirmasi Hapus");
         confirmationAlert.setHeaderText("Hapus Barang: " + currentItem.getNamaBarang());
@@ -88,38 +152,26 @@ public class ItemCardController {
         Optional<ButtonType> result = confirmationAlert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             boolean success = itemDAO.deleteItemById(currentItem.getId());
-            if (success) {
-                if (updateCallback != null) {
-                    updateCallback.run(); // Menggunakan nama callback baru
-                }
-            } else {
-                // ... (Alert error tetap sama) ...
+            if (success && updateCallback != null) {
+                updateCallback.run();
             }
         }
     }
 
-    // --- METODE INI YANG DIPERBARUI ---
     @FXML
     private void handleEditAction() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("UploadItemView.fxml"));
             Parent root = loader.load();
-
-            // Ambil controller dari form yang akan dibuka
             UploadItemController uploadController = loader.getController();
-            // Kirim data item yang ada ke form tersebut
             uploadController.initData(currentItem);
-
             Stage editStage = new Stage();
             editStage.setTitle("Edit Barang");
             editStage.setScene(new Scene(root));
             editStage.showAndWait();
-            
-            // Setelah jendela edit ditutup, refresh halaman profil
             if (updateCallback != null) {
                 updateCallback.run();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

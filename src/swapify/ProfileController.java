@@ -48,16 +48,11 @@ public class ProfileController {
         if (currentUser != null) {
             namaLengkapLabel.setText(currentUser.getNama());
             emailLabel.setText(currentUser.getEmail());
-            
-            // --- PERUBAHAN DI SINI ---
-            // Memanggil metode untuk memuat foto profil
             loadProfileImage(currentUser.getProfileImagePath());
-            
             loadUserItems(currentUser.getId());
         }
     }
     
-    // --- METODE BARU UNTUK MEMUAT FOTO PROFIL ---
     private void loadProfileImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
             File imageFile = new File(imagePath);
@@ -66,10 +61,10 @@ public class ProfileController {
                 profileImageView.setImage(image);
             } else {
                 System.err.println("File gambar profil tidak ditemukan di: " + imagePath);
-                profileImageView.setImage(null); // Atau set gambar default jika ada
+                profileImageView.setImage(null);
             }
         } else {
-            profileImageView.setImage(null); // Atau set gambar default jika path kosong
+            profileImageView.setImage(null);
         }
     }
 
@@ -88,7 +83,10 @@ public class ProfileController {
             Stage uploadStage = new Stage();
             uploadStage.setTitle("Unggah Barang Baru");
             uploadStage.setScene(new Scene(root));
-            uploadStage.setMaximized(true);
+            
+            // --- PERUBAHAN DI SINI ---
+            // uploadStage.setMaximized(true); // Baris ini dihapus/dikomentari
+
             uploadStage.showAndWait();
             
             loadUserItems(currentUser.getId());
@@ -142,10 +140,8 @@ public class ProfileController {
             editStage.setScene(new Scene(root));
             editStage.showAndWait();
 
-            // --- PERUBAHAN DI SINI ---
-            // Setelah jendela edit ditutup, perbarui tampilan di halaman profil
             namaLengkapLabel.setText(currentUser.getNama());
-            loadProfileImage(currentUser.getProfileImagePath()); // <-- REFRESH FOTO PROFIL
+            loadProfileImage(currentUser.getProfileImagePath());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -33,8 +33,6 @@ public class MainDashboardController implements Initializable {
     private TextField searchField;
     @FXML
     private Button logoutButton;
-    
-    // --- Variabel FXML Diperbarui ---
     @FXML
     private StackPane profileButtonContainer;
     @FXML
@@ -53,38 +51,66 @@ public class MainDashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadItems();
-        // Memanggil metode untuk mengatur avatar profil saat inisialisasi
         setupProfileAvatar();
     }
     
-    // --- METODE BARU UNTUK MENGATUR AVATAR PROFIL ---
+    // --- METODE INI DIPERBARUI TOTAL DENGAN LISTENER ---
     private void setupProfileAvatar() {
         User loggedInUser = UserSession.getInstance().getLoggedInUser();
         if (loggedInUser != null) {
             String imagePath = loggedInUser.getProfileImagePath();
 
-            // Kondisi 1: Jika user punya foto profil
             if (imagePath != null && !imagePath.isEmpty()) {
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
-                    Image profileImage = new Image(imageFile.toURI().toString());
-                    profileCircle.setFill(new ImagePattern(profileImage));
-                    profileInitialLabel.setVisible(false); // Sembunyikan label inisial
-                    return; 
+                    // Muat gambar di background (asinkron)
+                    Image profileImage = new Image(imageFile.toURI().toString(), true);
+
+                    // Tambahkan listener untuk menunggu gambar selesai dimuat
+                    profileImage.progressProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue.doubleValue() == 1.0) {
+                            // Setelah gambar 100% dimuat, baru atur isian Circle
+                            profileCircle.setFill(new ImagePattern(profileImage));
+                            profileInitialLabel.setVisible(false);
+                        }
+                    });
+                    
+                    // Listener untuk error jika gambar gagal dimuat
+                    profileImage.errorProperty().addListener((observable, oldValue, hadError) -> {
+                        if (hadError) {
+                            System.err.println("Gagal memuat gambar profil: " + imagePath);
+                            displayInitial(loggedInUser); // Tampilkan inisial jika error
+                        }
+                    });
+
+                    // Jika gambar sudah ada di cache, tampilkan langsung
+                    if (profileImage.getProgress() == 1.0 && !profileImage.isError()) {
+                        profileCircle.setFill(new ImagePattern(profileImage));
+                        profileInitialLabel.setVisible(false);
+                    }
+                    return;
                 }
             }
+            
+            // Jika tidak ada path gambar, tampilkan inisial
+            displayInitial(loggedInUser);
+        }
+    }
 
-            // Kondisi 2: Jika user tidak punya foto profil, tampilkan inisial
-            profileCircle.setFill(Color.web("#495057")); // Set warna latar default
-            profileInitialLabel.setVisible(true); // Tampilkan label
-            if (loggedInUser.getNama() != null && !loggedInUser.getNama().isEmpty()) {
-                profileInitialLabel.setText(loggedInUser.getNama().substring(0, 1).toUpperCase());
-            }
+    // --- METODE BANTUAN BARU UNTUK MENAMPILKAN INISIAL ---
+    private void displayInitial(User user) {
+        profileCircle.setFill(Color.web("#495057"));
+        profileInitialLabel.setVisible(true);
+        if (user != null && user.getNama() != null && !user.getNama().isEmpty()) {
+            profileInitialLabel.setText(user.getNama().substring(0, 1).toUpperCase());
+        } else {
+            profileInitialLabel.setText("?");
         }
     }
 
     @FXML
     private void handleLogoutAction() {
+        // ... (Tidak ada perubahan di sini)
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Konfirmasi Logout");
         alert.setHeaderText("Anda akan keluar dari sesi ini.");
@@ -108,9 +134,9 @@ public class MainDashboardController implements Initializable {
         }
     }
 
-    // Metode handleProfileAction sekarang menggunakan MouseEvent
     @FXML
     private void handleProfileAction(MouseEvent event) {
+        // ... (Tidak ada perubahan di sini)
         User loggedInUser = UserSession.getInstance().getLoggedInUser();
         if (loggedInUser != null) {
             try {
@@ -124,7 +150,6 @@ public class MainDashboardController implements Initializable {
                 profileStage.setMaximized(true);
                 profileStage.showAndWait();
                 loadItems();
-                // Perbarui avatar setelah jendela profil ditutup, siapa tahu ada perubahan
                 setupProfileAvatar(); 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -139,6 +164,7 @@ public class MainDashboardController implements Initializable {
     }
 
     private void loadItems() {
+        // ... (Tidak ada perubahan di sini)
         ObservableList<Item> availableItems = itemDAO.getAllAvailableItems();
         itemCatalogPane.getChildren().clear();
         for (Item item : availableItems) {
@@ -155,6 +181,7 @@ public class MainDashboardController implements Initializable {
     }
     
     private void showAlert(String title, String header, String content) {
+        // ... (Tidak ada perubahan di sini)
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);

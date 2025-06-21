@@ -1,125 +1,165 @@
-/* Gaya dasar untuk setiap kartu barang */
+/* =================================================================== */
+/* Gaya Umum (General Styles) */
+/* =================================================================== */
+
+.root {
+    -fx-font-family: 'System';
+}
+
+/* =================================================================== */
+/* Gaya Kartu Barang (Item Card Styles) */
+/* =================================================================== */
 
 .item-card {
-
--fx-background-color: white;
-
--fx-background-radius: 8;
-
--fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-
--fx-transition: all 0.2s ease-in-out; /* Menambahkan transisi halus */
-
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: #e0e0e0; /* Border abu-abu tipis */
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);
+    -fx-transition: all 0.2s ease-in-out;
 }
-
-
-
-/* Efek saat mouse berada di atas kartu */
 
 .item-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 15, 0, 0, 4);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
 
--fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 4);
+.card-title {
+    -fx-font-size: 1.15em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #212529;
+}
 
--fx-scale-x: 1.03;
+.card-subtitle {
+    -fx-font-size: 0.9em;
+    -fx-text-fill: #6c757d;
+}
 
--fx-scale-y: 1.03;
+/* =================================================================== */
+/* Gaya Halaman Detail Barang (Item Detail Page Styles) */
+/* =================================================================== */
 
+.detail-pane {
+    -fx-background-color: #f8f9fa;
+}
+
+.detail-title {
+    -fx-font-size: 2.2em;
+    -fx-font-weight: 700;
+    -fx-text-fill: #212529;
+}
+
+.detail-meta-text {
+    -fx-font-size: 0.95em;
+    -fx-text-fill: #6c757d;
+}
+
+.detail-description-text {
+    -fx-font-size: 1.05em;
+    -fx-line-spacing: 5px;
 }
 
 
+/* =================================================================== */
+/* Gaya Tag dan Label (Tag and Label Styles) */
+/* =================================================================== */
 
-/* Membuat sudut gambar menjadi tumpul */
+/* Gaya dasar untuk semua tag */
+.tag {
+    -fx-background-radius: 8;
+    -fx-padding: 5px 12px;
+    -fx-font-size: 0.9em;
+    -fx-font-weight: bold;
+}
 
-.item-image-view {
+/* Warna untuk jenis transaksi 'Tukar' */
+.tag-transaksi-tukar {
+    -fx-background-color: #e2e3e5;
+    -fx-text-fill: #383d41;
+}
 
--fx-background-radius: 8 8 0 0; /* Hanya sudut atas */
+/* Warna untuk jenis transaksi 'Donasi' */
+.tag-transaksi-donasi {
+    -fx-background-color: #d1ecf1;
+    -fx-text-fill: #0c5460;
+}
 
--fx-border-radius: 8 8 0 0;
-
+/* Warna untuk status 'Tersedia' */
+.tag-status-tersedia {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
 }
 
 
+/* =================================================================== */
+/* Gaya Tombol (Button Styles) */
+/* =================================================================== */
 
-/* Gaya untuk tombol detail */
-
+/* Tombol standar/detail */
 .detail-button {
-
--fx-background-color: #E4E6EB;
-
--fx-text-fill: #050505;
-
--fx-font-weight: bold;
-
--fx-background-radius: 6;
-
--fx-cursor: hand; /* Mengubah kursor menjadi tangan saat hover */
-
+    -fx-background-color: #E4E6EB;
+    -fx-text-fill: #050505;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
 }
-
-
 
 .detail-button:hover {
-
--fx-background-color: #D8DADF;
-
+    -fx-background-color: #D8DADF;
 }
 
-
-
-/* Tambahkan kode ini di styles.css */
-
-
-
-.delete-button {
-
--fx-background-color: #f0f2f5; /* Warna abu-abu netral */
-
--fx-background-radius: 50; /* Membuatnya bulat sempurna */
-
--fx-text-fill: #606770;
-
--fx-font-size: 14px;
-
--fx-cursor: hand;
-
-}
-
-
-
-.delete-button:hover {
-
--fx-background-color: #E53935; /* Warna merah saat disentuh mouse */
-
--fx-text-fill: white;
-
-}
-
-/* Tambahkan kode ini di styles.css */
-
-.edit-button {
-    -fx-background-color: #f0f2f5; /* Warna abu-abu netral */
-    -fx-background-radius: 50; /* Membuatnya bulat sempurna */
+/* Tombol ikon umum (dasar) */
+.icon-button {
+    -fx-background-color: #f0f2f5;
+    -fx-background-radius: 50; /* Bulat sempurna */
     -fx-text-fill: #606770;
     -fx-font-size: 14px;
     -fx-cursor: hand;
+    -fx-min-width: 35px;
+    -fx-pref-width: 35px;
+    -fx-max-width: 35px;
 }
 
+/* Tombol Edit */
+.edit-button {
+    .icon-button;
+}
 .edit-button:hover {
-    -fx-background-color: #0d6efd; /* Warna biru saat disentuh mouse */
+    -fx-background-color: #0d6efd; /* Biru */
     -fx-text-fill: white;
 }
 
-/* --- GAYA BARU UNTUK TOMBOL KEMBALI DITAMBAHKAN DI SINI --- */
+/* Tombol Hapus */
+.delete-button {
+    .icon-button;
+}
+.delete-button:hover {
+    -fx-background-color: #E53935; /* Merah */
+    -fx-text-fill: white;
+}
+
+/* Tombol Selesai */
+.done-button {
+    .icon-button;
+}
+.done-button:hover {
+    -fx-background-color: #28a745; /* Hijau */
+    -fx-text-fill: white;
+}
+
+/* Tombol Kembali */
 .back-button {
     -fx-background-color: transparent;
-    -fx-font-size: 22px; /* Membuat ikon panah lebih besar */
-    -fx-text-fill: #212529; /* Warna ikon */
+    -fx-font-size: 22px;
+    -fx-text-fill: #212529;
     -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-background-radius: 50; /* Membuat area tombol bulat */
-    -fx-padding: 2px 10px 2px 10px; /* Atur padding agar pas */
+    -fx-background-radius: 50;
+    -fx-padding: 2px 10px 2px 10px;
 }
 
 .back-button:hover {
-    -fx-background-color: #E4E6EB; /* Warna abu-abu saat disentuh mouse */
+    -fx-background-color: #E4E6EB;
 }
