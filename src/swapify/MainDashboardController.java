@@ -1,5 +1,6 @@
 package swapify;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -13,8 +14,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class MainDashboardController implements Initializable {
@@ -24,9 +32,15 @@ public class MainDashboardController implements Initializable {
     @FXML
     private TextField searchField;
     @FXML
-    private Button profileButton;
-    @FXML
     private Button logoutButton;
+    
+    // --- Variabel FXML Diperbarui ---
+    @FXML
+    private StackPane profileButtonContainer;
+    @FXML
+    private Circle profileCircle;
+    @FXML
+    private Label profileInitialLabel;
 
     private ItemDAO itemDAO;
     private UserDAO userDAO;
@@ -39,6 +53,34 @@ public class MainDashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadItems();
+        // Memanggil metode untuk mengatur avatar profil saat inisialisasi
+        setupProfileAvatar();
+    }
+    
+    // --- METODE BARU UNTUK MENGATUR AVATAR PROFIL ---
+    private void setupProfileAvatar() {
+        User loggedInUser = UserSession.getInstance().getLoggedInUser();
+        if (loggedInUser != null) {
+            String imagePath = loggedInUser.getProfileImagePath();
+
+            // Kondisi 1: Jika user punya foto profil
+            if (imagePath != null && !imagePath.isEmpty()) {
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    Image profileImage = new Image(imageFile.toURI().toString());
+                    profileCircle.setFill(new ImagePattern(profileImage));
+                    profileInitialLabel.setVisible(false); // Sembunyikan label inisial
+                    return; 
+                }
+            }
+
+            // Kondisi 2: Jika user tidak punya foto profil, tampilkan inisial
+            profileCircle.setFill(Color.web("#495057")); // Set warna latar default
+            profileInitialLabel.setVisible(true); // Tampilkan label
+            if (loggedInUser.getNama() != null && !loggedInUser.getNama().isEmpty()) {
+                profileInitialLabel.setText(loggedInUser.getNama().substring(0, 1).toUpperCase());
+            }
+        }
     }
 
     @FXML
@@ -57,44 +99,38 @@ public class MainDashboardController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("LoginView.fxml"));
                 Stage loginStage = new Stage();
                 loginStage.setTitle("Swapify - Login");
-
-                // --- PERUBAHAN DI SINI ---
-                loginStage.setScene(new Scene(root)); // Ukuran manual dihapus
-                loginStage.setMaximized(true);      // Jendela diatur ke mode maksimal
-
+                loginStage.setScene(new Scene(root));
+                loginStage.setMaximized(true);
                 loginStage.show();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    // Metode handleProfileAction sekarang menggunakan MouseEvent
     @FXML
-    private void handleProfileAction() {
+    private void handleProfileAction(MouseEvent event) {
         User loggedInUser = UserSession.getInstance().getLoggedInUser();
-
         if (loggedInUser != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ProfileView.fxml"));
                 Parent root = loader.load();
-
                 ProfileController profileController = loader.getController();
                 profileController.initData(loggedInUser, this);
-
                 Stage profileStage = new Stage();
                 profileStage.setTitle("Profil Pengguna - " + loggedInUser.getNama());
                 profileStage.setScene(new Scene(root));
                 profileStage.setMaximized(true);
                 profileStage.showAndWait();
-                
                 loadItems();
-
+                // Perbarui avatar setelah jendela profil ditutup, siapa tahu ada perubahan
+                setupProfileAvatar(); 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            showAlert("Error", "Sesi Tidak Ditemukan", "Tidak dapat menemukan data pengguna yang login. Silakan coba login kembali.");
+            showAlert("Error", "Sesi Tidak Ditemukan", "Tidak dapat menemukan data pengguna yang login.");
         }
     }
 

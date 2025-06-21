@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <StackPane prefHeight="600.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.MainDashboardController">
@@ -36,11 +37,14 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Button>
-                        <Button fx:id="profileButton" onAction="#handleProfileAction" prefHeight="40.0" prefWidth="40.0" style="-fx-background-radius: 50; -fx-background-color: #495057; -fx-text-fill: #f8f9fa; -fx-cursor: hand;" text="P">
-                           <font>
-                              <Font name="System Bold" size="18.0" />
-                           </font>
-                        </Button>
+                        
+                        <StackPane fx:id="profileButtonContainer" onMouseClicked="#handleProfileAction" style="-fx-cursor: hand;">
+                           <children>
+                              <Circle fx:id="profileCircle" radius="20.0" style="-fx-fill: #495057;" />
+                              <Label fx:id="profileInitialLabel" style="-fx-text-fill: #f8f9fa; -fx-font-weight: bold; -fx-font-size: 18px;" text="P" />
+                           </children>
+                        </StackPane>
+                        
                      </children>
                      <BorderPane.margin>
                         <Insets right="30.0" />
@@ -63,6 +67,5 @@
             </ScrollPane>
          </center>
       </BorderPane>
-
-      </children>
+   </children>
 </StackPane>
