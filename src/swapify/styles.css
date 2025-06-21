@@ -163,3 +163,99 @@
 .back-button:hover {
     -fx-background-color: #E4E6EB;
 }
+
+/* =================================================================== */
+/* Gaya Halaman Detail Barang (BARU) */
+/* =================================================================== */
+
+.detail-pane {
+    -fx-background-color: #f8f9fa; /* Warna latar belakang halaman */
+}
+
+/* Mengubah style judul utama */
+.detail-title {
+    -fx-font-size: 2.4em; /* Sedikit lebih besar */
+    -fx-font-weight: 700; /* Bold */
+    -fx-text-fill: #212529;
+    -fx-line-spacing: 2px;
+}
+
+/* Style baru untuk grup info uploader dan tanggal */
+.detail-meta-info {
+    -fx-font-size: 1.0em;
+    -fx-text-fill: #6c757d; /* Abu-abu */
+}
+
+/* Style baru untuk teks deskripsi */
+.detail-description-text {
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #343a40;
+    -fx-line-spacing: 4px; /* Jarak antar baris agar mudah dibaca */
+}
+
+/* Menyesuaikan tag agar lebih cocok dengan desain baru */
+.tag {
+    -fx-background-radius: 15; /* Lebih bulat */
+    -fx-padding: 6px 14px;
+    -fx-font-size: 0.85em;
+    -fx-font-weight: bold;
+}
+
+/* Menambahkan style untuk pemisah (separator) */
+.separator .line {
+    -fx-border-color: #dee2e6; /* Warna garis yang lembut */
+    -fx-border-width: 1 0 0 0;
+}
+
+
+/* =================================================================== */
+/* Gaya Baris Info Detail (REVISI FINAL) */
+/* =================================================================== */
+
+/* Gaya dasar untuk HBox yang berfungsi sebagai tag */
+.info-tag-box {
+    -fx-background-radius: 8; /* Sedikit lebih kotak dari tag biasa */
+    -fx-padding: 8px 12px;
+    -fx-alignment: center-left;
+    -fx-spacing: 10;
+}
+
+/* Gaya untuk ikon di dalam tag box */
+.info-tag-box .detail-info-icon {
+    -fx-font-size: 1.2em;
+}
+
+/* Gaya untuk teks di dalam tag box */
+.info-tag-box .detail-info-text {
+    -fx-font-size: 1.0em;
+    -fx-font-weight: bold;
+}
+
+/* -- ATURAN WARNA BERDASARKAN CLASS PADA HBOX -- */
+
+/* Gaya default/kategori (abu-abu) */
+.info-tag-box.tag-transaksi-tukar {
+    -fx-background-color: #e2e3e5;
+}
+.info-tag-box.tag-transaksi-tukar .detail-info-icon,
+.info-tag-box.tag-transaksi-tukar .detail-info-text {
+    -fx-text-fill: #383d41;
+}
+
+/* Gaya Donasi (biru muda) */
+.info-tag-box.tag-transaksi-donasi {
+    -fx-background-color: #d1ecf1;
+}
+.info-tag-box.tag-transaksi-donasi .detail-info-icon,
+.info-tag-box.tag-transaksi-donasi .detail-info-text {
+    -fx-text-fill: #0c5460;
+}
+
+/* Gaya Tersedia (hijau muda) */
+.info-tag-box.tag-status-tersedia {
+    -fx-background-color: #d4edda;
+}
+.info-tag-box.tag-status-tersedia .detail-info-icon,
+.info-tag-box.tag-status-tersedia .detail-info-text {
+    -fx-text-fill: #155724;
+}
