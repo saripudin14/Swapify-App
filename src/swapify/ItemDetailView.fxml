@@ -8,16 +8,15 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?> <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" styleClass="detail-pane" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.ItemDetailController">
    <children>
-      <Button fx:id="tutupButton" layoutX="824.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleTutupAction" styleClass="back-button" text="✖" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+      <Button fx:id="tutupButton" onAction="#handleTutupAction" styleClass="back-button" text="✖" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
       
-      <GridPane hgap="30.0" layoutX="50.0" layoutY="50.0" prefHeight="550.0" prefWidth="800.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+      <GridPane hgap="40.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="70.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="420.0" minWidth="10.0" prefWidth="385.0" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="415.0" />
@@ -26,57 +25,59 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <VBox alignment="CENTER" style="-fx-background-color: #ECEFF1; -fx-background-radius: 8;">
+            <VBox alignment="CENTER" style="-fx-background-color: #FFFFFF; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
                <children>
                   <ImageView fx:id="itemImageView" fitHeight="450.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </VBox>
             
-            <VBox spacing="15.0" GridPane.columnIndex="1">
+            <VBox spacing="20.0" GridPane.columnIndex="1">
                <children>
-                  <Label fx:id="namaBarangLabel" styleClass="detail-title" text="Nama Barang Super Panjang" wrapText="true" />
-                  <Separator prefWidth="200.0" />
-                  
-                  <VBox spacing="12.0">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="detail-info-row">
-                           <children>
-                              <Label fx:id="kategoriIconLabel" styleClass="detail-info-icon" text="🏷️" />
-                              <Label fx:id="kategoriTextLabel" styleClass="detail-info-text" text="Kategori : ..." />
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="detail-info-row">
-                           <children>
-                              <Label fx:id="jenisTransaksiIconLabel" styleClass="detail-info-icon" text="⇄" />
-                              <Label fx:id="jenisTransaksiTextLabel" styleClass="detail-info-text" text="Jenis Transaksi : ..." />
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="detail-info-row">
-                           <children>
-                              <Label fx:id="statusIconLabel" styleClass="detail-info-icon" text="●" />
-                              <Label fx:id="statusTextLabel" styleClass="detail-info-text" text="Status : ..." />
-                           </children>
-                        </HBox>
-                     </children>
-                  </VBox>
-                  
-                  <Separator prefWidth="200.0" />
+                  <Label fx:id="namaBarangLabel" styleClass="detail-title" text="Nama Barang" wrapText="true" />
                   
                   <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="detail-meta-info">
                      <children>
-                        <Label fx:id="uploaderNameLabel" text="👤 oleh ..." />
-                        <Label fx:id="tanggalUnggahLabel" text="📅 ..." />
+                        <Label fx:id="uploaderNameLabel" text="oleh Pengguna" />
+                        <Label fx:id="tanggalUnggahLabel" text="pada Tanggal" />
                      </children>
                   </HBox>
                   
                   <Separator prefWidth="200.0" />
                   
-                  <Label text="Deskripsi Barang">
+                  <GridPane fx:id="infoGridPane" hgap="10.0" vgap="12.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="LEFT" hgrow="NEVER" minWidth="80.0" />
+                      <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
+                        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" valignment="CENTER" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" valignment="CENTER" vgrow="SOMETIMES" />
+                      <RowConstraints fx:id="statusRow" minHeight="10.0" valignment="CENTER" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Transaksi" GridPane.rowIndex="0" />
+                        <Label text=":" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label fx:id="jenisTransaksiTextLabel" text="..." GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        
+                        <Label text="Kategori" GridPane.rowIndex="1" />
+                        <Label text=":" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="kategoriTextLabel" text="..." GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        
+                        <Label text="Status" GridPane.rowIndex="2" />
+                        <Label text=":" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label fx:id="statusTextLabel" text="..." GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                     </children>
+                  </GridPane>
+                  
+                  <Separator prefWidth="200.0" />
+                  
+                  <Label text="Deskripsi">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="deskripsiArea" styleClass="detail-description-text" text="..." wrapText="true" VBox.vgrow="ALWAYS" />
+                  <Label fx:id="deskripsiArea" styleClass="detail-description-text" text="Isi deskripsi..." wrapText="true" VBox.vgrow="ALWAYS" />
                </children>
                <padding>
                   <Insets left="10.0" />

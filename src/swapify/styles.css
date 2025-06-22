@@ -42,35 +42,41 @@
 /* =================================================================== */
 
 .detail-pane {
-    -fx-background-color: #f8f9fa;
+    -fx-background-color: #f8f9fa; /* Warna latar belakang halaman */
 }
 
 .detail-title {
-    -fx-font-size: 2.2em;
-    -fx-font-weight: 700;
+    -fx-font-size: 2.4em; /* Sedikit lebih besar */
+    -fx-font-weight: 700; /* Bold */
     -fx-text-fill: #212529;
+    -fx-line-spacing: 2px;
 }
 
-.detail-meta-text {
-    -fx-font-size: 0.95em;
-    -fx-text-fill: #6c757d;
+.detail-meta-info {
+    -fx-font-size: 1.0em;
+    -fx-text-fill: #6c757d; /* Abu-abu */
 }
 
 .detail-description-text {
-    -fx-font-size: 1.05em;
-    -fx-line-spacing: 5px;
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #343a40;
+    -fx-line-spacing: 4px; /* Jarak antar baris agar mudah dibaca */
 }
 
+.separator .line {
+    -fx-border-color: #dee2e6; /* Warna garis yang lembut */
+    -fx-border-width: 1 0 0 0;
+}
 
 /* =================================================================== */
-/* Gaya Tag dan Label (Tag and Label Styles) */
+/* Gaya Tag dan Label (Digunakan di Item Card & Detail) */
 /* =================================================================== */
 
-/* Gaya dasar untuk semua tag */
+/* Gaya dasar untuk semua tag di Item Card */
 .tag {
-    -fx-background-radius: 8;
-    -fx-padding: 5px 12px;
-    -fx-font-size: 0.9em;
+    -fx-background-radius: 15;
+    -fx-padding: 6px 14px;
+    -fx-font-size: 0.85em;
     -fx-font-weight: bold;
 }
 
@@ -92,12 +98,41 @@
     -fx-text-fill: #155724;
 }
 
+/* =================================================================== */
+/* Gaya Label Info (Untuk Halaman Detail) */
+/* =================================================================== */
+
+/* Gaya dasar untuk label yang berfungsi sebagai tag */
+.info-label {
+    -fx-background-radius: 15; /* Bulat */
+    -fx-padding: 6px 14px;
+    -fx-font-size: 1.0em;
+    -fx-font-weight: bold;
+}
+
+/* Warna untuk jenis transaksi 'Tukar' & Kategori (abu-abu) */
+.info-label-tukar {
+    -fx-background-color: #e2e3e5;
+    -fx-text-fill: #383d41;
+}
+
+/* Warna untuk jenis transaksi 'Donasi' (biru muda) */
+.info-label-donasi {
+    -fx-background-color: #d1ecf1;
+    -fx-text-fill: #0c5460;
+}
+
+/* Warna untuk status 'Tersedia' (hijau muda) */
+.info-label-tersedia {
+    -fx-background-color: #d4edda;
+    -fx-text-fill: #155724;
+}
+
 
 /* =================================================================== */
 /* Gaya Tombol (Button Styles) */
 /* =================================================================== */
 
-/* Tombol standar/detail */
 .detail-button {
     -fx-background-color: #E4E6EB;
     -fx-text-fill: #050505;
@@ -105,15 +140,13 @@
     -fx-background-radius: 6;
     -fx-cursor: hand;
 }
-
 .detail-button:hover {
     -fx-background-color: #D8DADF;
 }
 
-/* Tombol ikon umum (dasar) */
 .icon-button {
     -fx-background-color: #f0f2f5;
-    -fx-background-radius: 50; /* Bulat sempurna */
+    -fx-background-radius: 50;
     -fx-text-fill: #606770;
     -fx-font-size: 14px;
     -fx-cursor: hand;
@@ -122,34 +155,21 @@
     -fx-max-width: 35px;
 }
 
-/* Tombol Edit */
-.edit-button {
-    .icon-button;
-}
 .edit-button:hover {
-    -fx-background-color: #0d6efd; /* Biru */
+    -fx-background-color: #0d6efd;
     -fx-text-fill: white;
 }
 
-/* Tombol Hapus */
-.delete-button {
-    .icon-button;
-}
 .delete-button:hover {
-    -fx-background-color: #E53935; /* Merah */
+    -fx-background-color: #E53935;
     -fx-text-fill: white;
 }
 
-/* Tombol Selesai */
-.done-button {
-    .icon-button;
-}
 .done-button:hover {
-    -fx-background-color: #28a745; /* Hijau */
+    -fx-background-color: #28a745;
     -fx-text-fill: white;
 }
 
-/* Tombol Kembali */
 .back-button {
     -fx-background-color: transparent;
     -fx-font-size: 22px;
@@ -165,97 +185,82 @@
 }
 
 /* =================================================================== */
-/* Gaya Halaman Detail Barang (BARU) */
+/* Gaya Form (Tambah/Edit Barang) */
 /* =================================================================== */
 
-.detail-pane {
-    -fx-background-color: #f8f9fa; /* Warna latar belakang halaman */
+.form-container {
+    -fx-padding: 20px;
+    -fx-background-color: #f8f9fa;
 }
 
-/* Mengubah style judul utama */
-.detail-title {
-    -fx-font-size: 2.4em; /* Sedikit lebih besar */
-    -fx-font-weight: 700; /* Bold */
-    -fx-text-fill: #212529;
-    -fx-line-spacing: 2px;
-}
-
-/* Style baru untuk grup info uploader dan tanggal */
-.detail-meta-info {
-    -fx-font-size: 1.0em;
-    -fx-text-fill: #6c757d; /* Abu-abu */
-}
-
-/* Style baru untuk teks deskripsi */
-.detail-description-text {
-    -fx-font-size: 1.1em;
+.form-title {
+    -fx-font-size: 1.8em;
+    -fx-font-weight: bold;
     -fx-text-fill: #343a40;
-    -fx-line-spacing: 4px; /* Jarak antar baris agar mudah dibaca */
 }
 
-/* Menyesuaikan tag agar lebih cocok dengan desain baru */
-.tag {
-    -fx-background-radius: 15; /* Lebih bulat */
-    -fx-padding: 6px 14px;
-    -fx-font-size: 0.85em;
-    -fx-font-weight: bold;
-}
-
-/* Menambahkan style untuk pemisah (separator) */
-.separator .line {
-    -fx-border-color: #dee2e6; /* Warna garis yang lembut */
-    -fx-border-width: 1 0 0 0;
-}
-
-
-/* =================================================================== */
-/* Gaya Baris Info Detail (REVISI FINAL) */
-/* =================================================================== */
-
-/* Gaya dasar untuk HBox yang berfungsi sebagai tag */
-.info-tag-box {
-    -fx-background-radius: 8; /* Sedikit lebih kotak dari tag biasa */
-    -fx-padding: 8px 12px;
-    -fx-alignment: center-left;
-    -fx-spacing: 10;
-}
-
-/* Gaya untuk ikon di dalam tag box */
-.info-tag-box .detail-info-icon {
-    -fx-font-size: 1.2em;
-}
-
-/* Gaya untuk teks di dalam tag box */
-.info-tag-box .detail-info-text {
+.form-label {
     -fx-font-size: 1.0em;
     -fx-font-weight: bold;
+    -fx-text-fill: #495057;
 }
 
-/* -- ATURAN WARNA BERDASARKAN CLASS PADA HBOX -- */
-
-/* Gaya default/kategori (abu-abu) */
-.info-tag-box.tag-transaksi-tukar {
-    -fx-background-color: #e2e3e5;
-}
-.info-tag-box.tag-transaksi-tukar .detail-info-icon,
-.info-tag-box.tag-transaksi-tukar .detail-info-text {
-    -fx-text-fill: #383d41;
-}
-
-/* Gaya Donasi (biru muda) */
-.info-tag-box.tag-transaksi-donasi {
-    -fx-background-color: #d1ecf1;
-}
-.info-tag-box.tag-transaksi-donasi .detail-info-icon,
-.info-tag-box.tag-transaksi-donasi .detail-info-text {
-    -fx-text-fill: #0c5460;
+/* Style umum untuk TextField, TextArea, ComboBox */
+.form-control {
+    -fx-font-size: 1.0em;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ced4da;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 8px 12px;
 }
 
-/* Gaya Tersedia (hijau muda) */
-.info-tag-box.tag-status-tersedia {
-    -fx-background-color: #d4edda;
+.form-control:focused {
+    -fx-border-color: #80bdff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 123, 255, 0.25), 4, 0, 0, 0);
 }
-.info-tag-box.tag-status-tersedia .detail-info-icon,
-.info-tag-box.tag-status-tersedia .detail-info-text {
-    -fx-text-fill: #155724;
+
+/* Area Pratinjau Gambar */
+.image-preview-box {
+    -fx-alignment: center;
+    -fx-spacing: 15;
+    -fx-padding: 20;
+    -fx-background-color: #e9ecef;
+    -fx-background-radius: 8;
+    -fx-border-style: dashed;
+    -fx-border-width: 2;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 8;
+}
+
+.image-preview-view {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+/* Tombol Aksi */
+.button-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 1.1em;
+    -fx-cursor: hand;
+}
+.button-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+.button-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 8px 16px;
+    -fx-font-size: 1.0em;
+    -fx-cursor: hand;
+}
+.button-secondary:hover {
+    -fx-background-color: #5a6268;
 }

@@ -6,59 +6,71 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefWidth="450.0" spacing="15.0" style="-fx-background-color: #f4f6f9;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.UploadItemController">
-   <padding>
-      <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
-   </padding>
+<AnchorPane prefHeight="600.0" prefWidth="850.0" styleClass="form-container" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.UploadItemController">
    <children>
-      <Label fx:id="formTitleLabel" text="Unggah Barang Baru">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <VBox spacing="5.0">
+      <GridPane hgap="30.0" vgap="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="380.0" minWidth="10.0" prefWidth="350.0" />
+          <ColumnConstraints hgrow="SOMETIMES" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <Label text="Nama Barang" />
-            <TextField fx:id="namaBarangField" promptText="Contoh: Kemeja Flanel Biru" />
-         </children>
-      </VBox>
-      <VBox spacing="5.0">
-         <children>
-            <Label text="Deskripsi" />
-            <TextArea fx:id="deskripsiArea" prefHeight="100.0" promptText="Jelaskan kondisi, ukuran, merek, atau barang apa yang ingin ditukar." wrapText="true" />
-         </children>
-      </VBox>
-      <HBox spacing="15.0">
-         <children>
-            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+            <VBox styleClass="image-preview-box" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <children>
-                  <Label text="Kategori" />
-                  <ComboBox fx:id="kategoriComboBox" prefWidth="250.0" promptText="Pilih Kategori" />
+                  <ImageView fx:id="imagePreview" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" styleClass="image-preview-view" />
+                  <Label fx:id="namaFileGambarLabel" text="Pilih sebuah gambar..." />
+                  <Button fx:id="pilihGambarButton" mnemonicParsing="false" onAction="#handlePilihGambar" styleClass="button-secondary" text="Pilih Gambar" />
                </children>
             </VBox>
-            <VBox spacing="5.0" HBox.hgrow="ALWAYS">
+            
+            <VBox spacing="15.0" GridPane.columnIndex="1">
                <children>
-                  <Label text="Jenis Transaksi" />
-                  <ComboBox fx:id="jenisTransaksiComboBox" prefWidth="250.0" promptText="Pilih Jenis" />
+                  <Label fx:id="formTitleLabel" styleClass="form-title" text="Unggah Barang Baru" />
+                  
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label styleClass="form-label" text="Nama Barang" />
+                        <TextField fx:id="namaBarangField" styleClass="form-control" />
+                     </children>
+                  </VBox>
+                  
+                  <VBox spacing="5.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <Label styleClass="form-label" text="Deskripsi" />
+                        <TextArea fx:id="deskripsiArea" prefHeight="150.0" styleClass="form-control" wrapText="true" />
+                     </children>
+                  </VBox>
+                  
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label styleClass="form-label" text="Kategori" />
+                        <ComboBox fx:id="kategoriComboBox" maxWidth="1.7976931348623157E308" styleClass="form-control" />
+                     </children>
+                  </VBox>
+                  
+                  <VBox spacing="5.0">
+                     <children>
+                        <Label styleClass="form-label" text="Jenis Transaksi" />
+                        <ComboBox fx:id="jenisTransaksiComboBox" maxWidth="1.7976931348623157E308" styleClass="form-control" />
+                     </children>
+                  </VBox>
+                  
+                  <Button fx:id="unggahButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleUnggahBarang" styleClass="button-primary" text="Unggah Barang" />
                </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
             </VBox>
          </children>
-      </HBox>
-      <VBox spacing="5.0">
-         <children>
-            <Label text="Gambar Barang" />
-            <HBox spacing="10.0">
-               <children>
-                  <Button fx:id="pilihGambarButton" onAction="#handlePilihGambar" text="Pilih Gambar..." />
-                  <Label fx:id="namaFileGambarLabel" text="Belum ada gambar yang dipilih." />
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <Button fx:id="unggahButton" defaultButton="true" onAction="#handleUnggahBarang" prefHeight="40.0" prefWidth="450.0" style="-fx-background-color: #1877F2; -fx-text-fill: white; -fx-font-weight: bold;" text="Unggah Barang" />
+      </GridPane>
    </children>
-</VBox>
+</AnchorPane>
