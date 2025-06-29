@@ -13,19 +13,15 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" styleClass="root" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.UserProfileController">
    <children>
-      <VBox alignment="TOP_CENTER" layoutX="190.0" layoutY="46.0" prefHeight="628.0" prefWidth="900.0" spacing="20.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="190.0" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="46.0">
+<Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButtonAction" styleClass="button-danger" text="✖" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="15.0" />      
+      <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="190.0" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="46.0">
          <children>
-            <HBox alignment="CENTER_LEFT">
-               <children>
-                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButtonAction" styleClass="back-button" text="←" />
-               </children>
-            </HBox>
+            <HBox alignment="CENTER_LEFT" />
             <VBox styleClass="page-container">
                <padding>
                   <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
                </padding>
                <children>
-                  
                   <HBox alignment="CENTER_LEFT" spacing="20.0">
                      <children>
                         <Circle fx:id="profileImageCircle" radius="50" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0">
