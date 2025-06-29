@@ -19,7 +19,7 @@
          <children>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButtonAction" styleClass="back-button" text="←" />
+                  <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBackButtonAction" styleClass="button-danger" text="✖" />
                </children>
                <VBox.margin>
                   <Insets left="15.0" top="15.0" />
