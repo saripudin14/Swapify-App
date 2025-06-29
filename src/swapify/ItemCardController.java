@@ -12,16 +12,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle; // Import diubah dari ImageView
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class ItemCardController {
 
-    @FXML private Rectangle itemImageRectangle; // Tipe diubah menjadi Rectangle
-    
+    @FXML private Rectangle itemImageRectangle;
     @FXML private Label itemNameLabel;
     @FXML private Label itemCategoryLabel;
     @FXML private Label uploaderNameLabel;
@@ -35,17 +35,22 @@ public class ItemCardController {
 
     private Item currentItem;
     private ItemDAO itemDAO;
+    private UserDAO userDAO;
     private Runnable updateCallback;
 
     public ItemCardController() {
         itemDAO = new ItemDAO();
+        userDAO = new UserDAO();
     }
 
     public void setData(Item item) {
         this.currentItem = item;
         itemNameLabel.setText(item.getNamaBarang());
         itemCategoryLabel.setText("Kategori: " + item.getKategori());
+        
         uploaderNameLabel.setText("oleh: " + item.getNamaUploader());
+        uploaderNameLabel.setStyle("-fx-cursor: hand; -fx-underline: true;");
+        uploaderNameLabel.setOnMouseClicked(this::handleUploaderProfileClick);
         
         applyTagStyles(item.getJenisTransaksi(), item.getStatus());
         
@@ -53,15 +58,15 @@ public class ItemCardController {
         if (imagePath != null && !imagePath.isEmpty()) {
             File imageFile = new File(imagePath);
             if (imageFile.exists()) {
-                // Menggunakan konstruktor canggih untuk kualitas terbaik
                 Image image = new Image(imageFile.toURI().toString(), 220, 160, true, true, true);
                 
                 image.progressProperty().addListener((obs, oldVal, newVal) -> {
-                    if (newVal.doubleValue() == 1.0) {
+                    if (newVal.doubleValue() >= 1.0) {
                         itemImageRectangle.setFill(new ImagePattern(image));
                     }
                 });
-                if (image.getProgress() == 1.0) {
+                
+                if (image.getProgress() >= 1.0) {
                     itemImageRectangle.setFill(new ImagePattern(image));
                 }
 
@@ -74,9 +79,8 @@ public class ItemCardController {
     }
 
     private void applyTagStyles(String jenisTransaksi, String status) {
-        // Atur gaya untuk label status
         if ("Tersedia".equals(status)) {
-            statusLabel.setText("● " + status); // Menambahkan ikon lingkaran
+            statusLabel.setText("● " + status);
             statusLabel.getStyleClass().setAll("tag", "tag-status-tersedia");
             statusLabel.setVisible(true);
             statusLabel.setManaged(true);
@@ -85,18 +89,16 @@ public class ItemCardController {
             statusLabel.setManaged(false);
         }
         
-        // Atur gaya dan ikon untuk label jenis transaksi
         itemTypeLabel.getStyleClass().setAll("tag"); 
         if ("Donasi".equals(jenisTransaksi)) {
-            itemTypeLabel.setText("❤ " + jenisTransaksi); // Menambahkan ikon hati
+            itemTypeLabel.setText("❤ " + jenisTransaksi);
             itemTypeLabel.getStyleClass().add("tag-transaksi-donasi");
-        } else { // Asumsikan selain itu adalah "Tukar"
-            itemTypeLabel.setText("⇄ " + jenisTransaksi); // Menambahkan ikon tukar
+        } else {
+            itemTypeLabel.setText("⇄ " + jenisTransaksi);
             itemTypeLabel.getStyleClass().add("tag-transaksi-tukar");
         }
     }
     
-    // ... Sisa metode tidak berubah ...
     public void showOwnerControls() {
         ownerControlsBox.setVisible(true);
         ownerControlsBox.setManaged(true);
@@ -105,7 +107,7 @@ public class ItemCardController {
     public void setOnUpdateCallback(Runnable callback) {
         this.updateCallback = callback;
     }
-    
+
     @FXML
     private void handleMarkAsDoneAction() {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
@@ -118,11 +120,8 @@ public class ItemCardController {
             boolean success = itemDAO.updateItemStatus(currentItem.getId(), "Selesai");
             if (success && updateCallback != null) {
                 updateCallback.run(); 
-            } else {
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                errorAlert.setTitle("Gagal");
-                errorAlert.setContentText("Gagal memperbarui status barang.");
-                errorAlert.showAndWait();
+            } else if (!success) {
+                showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal memperbarui status barang.");
             }
         }
     }
@@ -175,5 +174,38 @@ public class ItemCardController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void handleUploaderProfileClick(MouseEvent event) {
+        try {
+            User uploader = userDAO.getUserById(currentItem.getUserId());
+            if (uploader == null) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Tidak dapat menemukan data pengguna.");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("UserProfileView.fxml"));
+            Parent root = loader.load();
+
+            UserProfileController controller = loader.getController();
+            controller.initData(uploader); 
+
+            Stage stage = new Stage();
+            stage.setTitle("Profil " + uploader.getNama());
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Gagal membuka halaman profil pengguna.");
+        }
+    }
+    
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

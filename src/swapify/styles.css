@@ -4,16 +4,95 @@
 
 .root {
     -fx-font-family: 'System';
+    /* Latar belakang abu-abu yang lembut untuk seluruh aplikasi */
+    -fx-background-color: #F0F2F5; 
 }
 
 /* =================================================================== */
-/* Gaya Kartu Barang (Item Card Styles) */
+/* Gaya untuk Kontainer Halaman (Page Container) */
+/* =================================================================== */
+
+/* Akan kita gunakan untuk membungkus konten utama di halaman detail dan profil */
+.page-container {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 12, 0, 0, 3);
+}
+
+/* =================================================================== */
+/* Gaya Tipografi (Typography) */
+/* =================================================================== */
+
+/* Untuk judul utama di setiap halaman */
+.page-header {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1d2129;
+}
+
+/* Untuk teks sekunder seperti "oleh author" atau email */
+.page-subheader {
+    -fx-font-size: 14px;
+    -fx-text-fill: #606770;
+}
+
+/* Untuk judul setiap bagian, seperti "Deskripsi" atau "Barang yang Ditawarkan" */
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1d2129;
+    -fx-padding: 15px 0 5px 0;
+}
+
+/* Untuk teks deskripsi barang agar lebih mudah dibaca */
+.item-description-text {
+    -fx-font-size: 15px;
+    -fx-text-fill: #1d2129;
+    -fx-line-spacing: 5px; /* Menambah jarak antar baris */
+}
+
+
+/* =================================================================== */
+/* Gaya Tombol (Button Styles) */
+/* =================================================================== */
+
+.button-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-padding: 10px 20px;
+    -fx-font-size: 1.1em;
+    -fx-cursor: hand;
+}
+.button-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+/* Tombol kembali yang lebih elegan */
+.back-button {
+    -fx-background-color: transparent;
+    -fx-font-size: 24px;
+    -fx-text-fill: #212529;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 50%; /* Membuat hover menjadi bulat */
+    -fx-padding: 0px 12px 4px 12px;
+}
+
+.back-button:hover {
+    -fx-background-color: #E4E6EB;
+}
+
+
+/* =================================================================== */
+/* Gaya Kartu Barang (Item Card Styles) - Tidak banyak berubah */
 /* =================================================================== */
 
 .item-card {
     -fx-background-color: white;
     -fx-background-radius: 8;
-    -fx-border-color: #e0e0e0; /* Border abu-abu tipis */
+    -fx-border-color: #e0e0e0;
     -fx-border-width: 1;
     -fx-border-radius: 8;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);
@@ -36,41 +115,6 @@
     -fx-font-size: 0.9em;
     -fx-text-fill: #6c757d;
 }
-
-/* =================================================================== */
-/* Gaya Halaman Detail Barang (Item Detail Page Styles) */
-/* =================================================================== */
-
-.detail-pane {
-    -fx-background-color: #f8f9fa; /* Warna latar belakang halaman */
-}
-
-.detail-title {
-    -fx-font-size: 2.4em; /* Sedikit lebih besar */
-    -fx-font-weight: 700; /* Bold */
-    -fx-text-fill: #212529;
-    -fx-line-spacing: 2px;
-}
-
-.detail-meta-info {
-    -fx-font-size: 1.0em;
-    -fx-text-fill: #6c757d; /* Abu-abu */
-}
-
-.detail-description-text {
-    -fx-font-size: 1.1em;
-    -fx-text-fill: #343a40;
-    -fx-line-spacing: 4px; /* Jarak antar baris agar mudah dibaca */
-}
-
-.separator .line {
-    -fx-border-color: #dee2e6; /* Warna garis yang lembut */
-    -fx-border-width: 1 0 0 0;
-}
-
-/* =================================================================== */
-/* Gaya Tag dan Label (Digunakan di Item Card & Detail) */
-/* =================================================================== */
 
 /* Gaya dasar untuk semua tag di Item Card */
 .tag {
@@ -96,171 +140,4 @@
 .tag-status-tersedia {
     -fx-background-color: #d4edda;
     -fx-text-fill: #155724;
-}
-
-/* =================================================================== */
-/* Gaya Label Info (Untuk Halaman Detail) */
-/* =================================================================== */
-
-/* Gaya dasar untuk label yang berfungsi sebagai tag */
-.info-label {
-    -fx-background-radius: 15; /* Bulat */
-    -fx-padding: 6px 14px;
-    -fx-font-size: 1.0em;
-    -fx-font-weight: bold;
-}
-
-/* Warna untuk jenis transaksi 'Tukar' & Kategori (abu-abu) */
-.info-label-tukar {
-    -fx-background-color: #e2e3e5;
-    -fx-text-fill: #383d41;
-}
-
-/* Warna untuk jenis transaksi 'Donasi' (biru muda) */
-.info-label-donasi {
-    -fx-background-color: #d1ecf1;
-    -fx-text-fill: #0c5460;
-}
-
-/* Warna untuk status 'Tersedia' (hijau muda) */
-.info-label-tersedia {
-    -fx-background-color: #d4edda;
-    -fx-text-fill: #155724;
-}
-
-
-/* =================================================================== */
-/* Gaya Tombol (Button Styles) */
-/* =================================================================== */
-
-.detail-button {
-    -fx-background-color: #E4E6EB;
-    -fx-text-fill: #050505;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-cursor: hand;
-}
-.detail-button:hover {
-    -fx-background-color: #D8DADF;
-}
-
-.icon-button {
-    -fx-background-color: #f0f2f5;
-    -fx-background-radius: 50;
-    -fx-text-fill: #606770;
-    -fx-font-size: 14px;
-    -fx-cursor: hand;
-    -fx-min-width: 35px;
-    -fx-pref-width: 35px;
-    -fx-max-width: 35px;
-}
-
-.edit-button:hover {
-    -fx-background-color: #0d6efd;
-    -fx-text-fill: white;
-}
-
-.delete-button:hover {
-    -fx-background-color: #E53935;
-    -fx-text-fill: white;
-}
-
-.done-button:hover {
-    -fx-background-color: #28a745;
-    -fx-text-fill: white;
-}
-
-.back-button {
-    -fx-background-color: transparent;
-    -fx-font-size: 22px;
-    -fx-text-fill: #212529;
-    -fx-font-weight: bold;
-    -fx-cursor: hand;
-    -fx-background-radius: 50;
-    -fx-padding: 2px 10px 2px 10px;
-}
-
-.back-button:hover {
-    -fx-background-color: #E4E6EB;
-}
-
-/* =================================================================== */
-/* Gaya Form (Tambah/Edit Barang) */
-/* =================================================================== */
-
-.form-container {
-    -fx-padding: 20px;
-    -fx-background-color: #f8f9fa;
-}
-
-.form-title {
-    -fx-font-size: 1.8em;
-    -fx-font-weight: bold;
-    -fx-text-fill: #343a40;
-}
-
-.form-label {
-    -fx-font-size: 1.0em;
-    -fx-font-weight: bold;
-    -fx-text-fill: #495057;
-}
-
-/* Style umum untuk TextField, TextArea, ComboBox */
-.form-control {
-    -fx-font-size: 1.0em;
-    -fx-background-color: #ffffff;
-    -fx-border-color: #ced4da;
-    -fx-border-width: 1px;
-    -fx-border-radius: 4px;
-    -fx-background-radius: 4px;
-    -fx-padding: 8px 12px;
-}
-
-.form-control:focused {
-    -fx-border-color: #80bdff;
-    -fx-effect: dropshadow(gaussian, rgba(0, 123, 255, 0.25), 4, 0, 0, 0);
-}
-
-/* Area Pratinjau Gambar */
-.image-preview-box {
-    -fx-alignment: center;
-    -fx-spacing: 15;
-    -fx-padding: 20;
-    -fx-background-color: #e9ecef;
-    -fx-background-radius: 8;
-    -fx-border-style: dashed;
-    -fx-border-width: 2;
-    -fx-border-color: #ced4da;
-    -fx-border-radius: 8;
-}
-
-.image-preview-view {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-}
-
-/* Tombol Aksi */
-.button-primary {
-    -fx-background-color: #007bff;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-padding: 10px 20px;
-    -fx-font-size: 1.1em;
-    -fx-cursor: hand;
-}
-.button-primary:hover {
-    -fx-background-color: #0056b3;
-}
-
-.button-secondary {
-    -fx-background-color: #6c757d;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-padding: 8px 16px;
-    -fx-font-size: 1.0em;
-    -fx-cursor: hand;
-}
-.button-secondary:hover {
-    -fx-background-color: #5a6268;
 }
