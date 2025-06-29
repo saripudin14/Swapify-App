@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.RowConstraints; // Pastikan import ini ada
 import javafx.stage.Stage;
 
 public class ItemDetailController {
@@ -27,7 +27,7 @@ public class ItemDetailController {
     @FXML private Label kategoriTextLabel;
     @FXML private Label jenisTransaksiTextLabel;
     @FXML private Label statusTextLabel;
-    @FXML private RowConstraints statusRow;
+    @FXML private RowConstraints statusRow; // Import untuk ini diperlukan
 
     private Item currentItem;
     private UserDAO userDAO;
@@ -41,8 +41,23 @@ public class ItemDetailController {
         if (item != null) {
             namaBarangLabel.setText(item.getNamaBarang());
             deskripsiArea.setText(item.getDeskripsi());
+            
+            // Mengisi teks ke dalam grid detail
             kategoriTextLabel.setText(item.getKategori());
             jenisTransaksiTextLabel.setText(item.getJenisTransaksi());
+            
+            // Logika untuk menampilkan atau menyembunyikan baris status
+            if ("Tersedia".equals(item.getStatus())) {
+                statusTextLabel.setText(item.getStatus());
+                statusRow.setMinHeight(10.0);
+                statusRow.setPrefHeight(30.0);
+                statusTextLabel.getParent().setVisible(true);
+            } else {
+                statusRow.setMinHeight(0);
+                statusRow.setPrefHeight(0);
+                statusTextLabel.getParent().setVisible(false);
+            }
+            
             uploaderNameLabel.setText("Oleh : " + item.getNamaUploader());
             uploaderNameLabel.setStyle("-fx-cursor: hand; -fx-underline: true;");
             uploaderNameLabel.setOnMouseClicked(this::handleUploaderProfileClick);

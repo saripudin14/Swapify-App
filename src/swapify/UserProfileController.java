@@ -9,14 +9,16 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle; // <-- IMPORT BARU
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 public class UserProfileController {
 
+    // --- FXML FIELDS DIPERBARUI ---
     @FXML
-    private ImageView profileImageView;
+    private Circle profileImageCircle; // <-- ImageView diganti dengan Circle
     @FXML
     private Label namaLengkapLabel;
     @FXML
@@ -43,17 +45,20 @@ public class UserProfileController {
         }
     }
     
+    // --- METODE INI DIPERBARUI TOTAL ---
     private void loadProfileImage(String imagePath) {
+        // Default color jika tidak ada gambar
+        profileImageCircle.setFill(javafx.scene.paint.Color.web("#e0e0e0"));
+
         if (imagePath != null && !imagePath.isEmpty()) {
             File imageFile = new File(imagePath);
             if (imageFile.exists()) {
                 Image image = new Image(imageFile.toURI().toString());
-                profileImageView.setImage(image);
+                // Mengatur gambar sebagai isian dari Circle agar menjadi bulat
+                profileImageCircle.setFill(new ImagePattern(image));
             } else {
-                profileImageView.setImage(null); // Atur gambar default jika path tidak valid
+                 System.err.println("File gambar profil tidak ditemukan di: " + imagePath);
             }
-        } else {
-            profileImageView.setImage(null); // Atur gambar default jika tidak ada foto
         }
     }
 

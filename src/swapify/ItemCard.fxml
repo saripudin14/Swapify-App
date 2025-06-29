@@ -9,29 +9,34 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
 
 <VBox prefHeight="330.0" prefWidth="220.0" styleClass="item-card" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.ItemCardController">
    <children>
       <Rectangle fx:id="itemImageRectangle" arcHeight="16.0" arcWidth="16.0" height="160.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="220.0" />
-      
-      <VBox spacing="5.0" style="-fx-background-color: white; -fx-background-radius: 0 0 8 8;" VBox.vgrow="ALWAYS">
+      <VBox spacing="8.0" style="-fx-background-color: white; -fx-background-radius: 0 0 8 8;" VBox.vgrow="ALWAYS">
          <children>
             <HBox spacing="8.0">
                <children>
-                  <Label fx:id="itemTypeLabel" styleClass="card-tag" text="Jenis" />
-                  <Label fx:id="statusLabel" styleClass="card-tag" text="Status" />
+                  <Label fx:id="itemTypeLabel" styleClass="tag" />
+                  <Label fx:id="statusLabel" styleClass="tag" />
                </children>
             </HBox>
             <VBox>
                <children>
                   <Label fx:id="itemNameLabel" styleClass="card-title" text="Nama Barang yang Ditampilkan" wrapText="true" />
-                  <Label fx:id="itemCategoryLabel" styleClass="card-subtitle" text="Kategori Barang" />
+                  
+                  <HBox alignment="CENTER_LEFT" spacing="5.0">
+                     <children>
+                        <Label styleClass="card-category-label" text="Kategori :" />
+                        <Label fx:id="itemCategoryLabel" styleClass="card-category-value" text="Pakaian" />
+                     </children>
+                  </HBox>
+
                </children>
             </VBox>
-            <Separator prefWidth="200.0" />
             <Region VBox.vgrow="ALWAYS" />
-            <HBox alignment="CENTER_LEFT">
+            <Separator prefWidth="200.0" />
+            <HBox alignment="CENTER_LEFT" style="-fx-padding: 5 0 0 0;">
                <children>
                   <Label fx:id="uploaderNameLabel" styleClass="card-subtitle" text="oleh: Nama Pengunggah" />
                   <Region HBox.hgrow="ALWAYS" />

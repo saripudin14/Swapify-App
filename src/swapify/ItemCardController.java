@@ -46,7 +46,11 @@ public class ItemCardController {
     public void setData(Item item) {
         this.currentItem = item;
         itemNameLabel.setText(item.getNamaBarang());
-        itemCategoryLabel.setText("Kategori: " + item.getKategori());
+        
+        // --- PERUBAHAN UTAMA DI SINI ---
+        // Sekarang kita hanya mengatur nilai kategori, karena teks "Kategori:"
+        // sudah ada di dalam file FXML sebagai label terpisah.
+        itemCategoryLabel.setText(item.getKategori());
         
         uploaderNameLabel.setText("oleh: " + item.getNamaUploader());
         uploaderNameLabel.setStyle("-fx-cursor: hand; -fx-underline: true;");
@@ -79,6 +83,7 @@ public class ItemCardController {
     }
 
     private void applyTagStyles(String jenisTransaksi, String status) {
+        // Logika ini sudah sesuai dengan FXML dan CSS terbaru
         if ("Tersedia".equals(status)) {
             statusLabel.setText("● " + status);
             statusLabel.getStyleClass().setAll("tag", "tag-status-tersedia");
