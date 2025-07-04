@@ -9,11 +9,6 @@ import javafx.collections.ObservableList;
 
 public class ProposalDAO {
 
-    /**
-     * Membuat proposal baru di database.
-     * @param proposal Data proposal yang akan disimpan.
-     * @return true jika berhasil, false jika gagal.
-     */
     public boolean createProposal(Proposal proposal) {
         String sql = "INSERT INTO proposals (item_id, proposer_id, owner_id, proposal_type, " +
                      "proposed_item_name, proposed_item_description, proposed_item_image_path, status) " +
@@ -39,12 +34,6 @@ public class ProposalDAO {
         }
     }
 
-    /**
-     * Mengambil semua proposal di mana pengguna terlibat, baik sebagai pengaju atau pemilik.
-     * Kita juga mengambil nama barang dan nama pengguna lain untuk ditampilkan di list.
-     * @param userId ID pengguna yang sedang login
-     * @return Daftar proposal yang relevan
-     */
     public ObservableList<Proposal> getProposalsForUser(int userId) {
         ObservableList<Proposal> proposals = FXCollections.observableArrayList();
         String sql = "SELECT " +
@@ -81,6 +70,10 @@ public class ProposalDAO {
                 p.setProposerName(rs.getString("proposer_name"));
                 p.setOwnerName(rs.getString("owner_name"));
 
+                p.setProposedItemName(rs.getString("proposed_item_name"));
+                p.setProposedItemDescription(rs.getString("proposed_item_description"));
+                p.setProposedItemImagePath(rs.getString("proposed_item_image_path"));
+
                 proposals.add(p);
             }
         } catch (SQLException e) {
@@ -89,13 +82,6 @@ public class ProposalDAO {
         return proposals;
     }
 
-    // --- METODE BARU DITAMBAHKAN DI SINI ---
-    /**
-     * Memperbarui status sebuah proposal (misal: Pending -> Accepted).
-     * @param proposalId ID dari proposal yang akan diperbarui.
-     * @param newStatus Status baru ("Accepted" atau "Rejected").
-     * @return true jika berhasil, false jika gagal.
-     */
     public boolean updateProposalStatus(int proposalId, String newStatus) {
         String sql = "UPDATE proposals SET status = ? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();

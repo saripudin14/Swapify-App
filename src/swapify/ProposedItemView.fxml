@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="container" spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 1; -fx-border-radius: 8; -fx-background-radius: 8;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.ProposedItemController">
+   <children>
+      <Label text="Barang yang Ditawarkan untuk Ditukar:" style="-fx-font-weight: bold;">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <Separator prefWidth="200.0" />
+      <HBox spacing="15.0">
+         <children>
+            <ImageView fx:id="itemImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+            <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="itemNameLabel" text="Nama Barang yang Ditawarkan" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="itemDescriptionLabel" text="Deskripsi barang yang ditawarkan akan muncul di sini..." wrapText="true" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+   </padding>
+</VBox>

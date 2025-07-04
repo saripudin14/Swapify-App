@@ -11,13 +11,13 @@ public class Proposal {
     private String proposedItemImagePath;
     private String status;
 
-    // --- FIELD BARU UNTUK TAMPILAN UI ---
+    // --- Field Baru untuk Tampilan UI ---
     private String originalItemName;
     private String originalItemImagePath;
     private String proposerName;
     private String ownerName;
 
-    // Getters
+    // --- Getters ---
     public int getId() { return id; }
     public int getItemId() { return itemId; }
     public int getProposerId() { return proposerId; }
@@ -32,7 +32,7 @@ public class Proposal {
     public String getProposerName() { return proposerName; }
     public String getOwnerName() { return ownerName; }
 
-    // Setters
+    // --- Setters ---
     public void setId(int id) { this.id = id; }
     public void setItemId(int itemId) { this.itemId = itemId; }
     public void setProposerId(int proposerId) { this.proposerId = proposerId; }
