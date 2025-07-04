@@ -325,3 +325,51 @@
     -fx-background-color: #e9ecef;
     -fx-effect: none;
 }
+
+/* =================================================================== */
+/* Gaya Tombol Utama (Primary & Danger Buttons) */
+/* =================================================================== */
+
+/* Gaya untuk tombol utama seperti "Edit Profil" */
+.button-primary {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10px 22px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+.button-primary:hover {
+    -fx-background-color: #0056b3;
+}
+
+/* Gaya untuk tombol logout */
+.button-logout {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: #f0f2f5; /* Merah untuk teks */
+    -fx-font-weight: bold;
+	-fx-background-radius: 8;
+    -fx-padding: 10px 22px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.button-logout:hover {
+    -fx-background-color: #3e424b;
+}
+
+/* Gaya untuk tombol bahaya seperti 'X' (tutup) */
+.button-danger {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black", "System";
+    -fx-font-size: 16px;
+    -fx-font-weight: 900;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3);
+}
+.button-danger:hover { -fx-background-color: #c82333; }
+.button-danger:pressed { -fx-background-color: #bd2130; -fx-effect: none; }

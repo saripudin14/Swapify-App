@@ -48,7 +48,8 @@
             <HBox alignment="CENTER" spacing="10.0">
                <children>
                   <Button fx:id="editProfileButton" onAction="#handleEditProfile" styleClass="button-primary" text="Edit Profil" />
-                  <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogoutAction" style="-fx-background-color: #f8d7da; -fx-text-fill: #721c24; -fx-cursor: hand;" text="Logout" />
+                  
+                  <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogoutAction" styleClass="button-logout" text="Logout" />
                </children>
                <VBox.margin>
                   <Insets top="20.0" />
