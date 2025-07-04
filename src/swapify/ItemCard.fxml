@@ -43,7 +43,6 @@
                   <HBox fx:id="ownerControlsBox" alignment="CENTER" managed="false" spacing="5.0" visible="false">
                      <children>
                         <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEditAction" styleClass="edit-button" text="✎" />
-                        <Button fx:id="markAsDoneButton" mnemonicParsing="false" onAction="#handleMarkAsDoneAction" styleClass="done-button" text="✓" />
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" styleClass="delete-button" text="🗑" />
                      </children>
                   </HBox>

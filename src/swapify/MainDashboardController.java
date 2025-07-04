@@ -31,8 +31,7 @@ public class MainDashboardController implements Initializable {
     private TilePane itemCatalogPane;
     @FXML
     private TextField searchField;
-    @FXML
-    private Button logoutButton;
+    // Tombol logout dihapus dari sini
     @FXML
     private StackPane profileButtonContainer;
     @FXML
@@ -53,8 +52,7 @@ public class MainDashboardController implements Initializable {
         loadItems();
         setupProfileAvatar();
     }
-    
-    // --- METODE INI DIPERBARUI TOTAL DENGAN LISTENER ---
+
     private void setupProfileAvatar() {
         User loggedInUser = UserSession.getInstance().getLoggedInUser();
         if (loggedInUser != null) {
@@ -63,27 +61,22 @@ public class MainDashboardController implements Initializable {
             if (imagePath != null && !imagePath.isEmpty()) {
                 File imageFile = new File(imagePath);
                 if (imageFile.exists()) {
-                    // Muat gambar di background (asinkron)
                     Image profileImage = new Image(imageFile.toURI().toString(), true);
 
-                    // Tambahkan listener untuk menunggu gambar selesai dimuat
                     profileImage.progressProperty().addListener((observable, oldValue, newValue) -> {
                         if (newValue.doubleValue() == 1.0) {
-                            // Setelah gambar 100% dimuat, baru atur isian Circle
                             profileCircle.setFill(new ImagePattern(profileImage));
                             profileInitialLabel.setVisible(false);
                         }
                     });
                     
-                    // Listener untuk error jika gambar gagal dimuat
                     profileImage.errorProperty().addListener((observable, oldValue, hadError) -> {
                         if (hadError) {
                             System.err.println("Gagal memuat gambar profil: " + imagePath);
-                            displayInitial(loggedInUser); // Tampilkan inisial jika error
+                            displayInitial(loggedInUser);
                         }
                     });
 
-                    // Jika gambar sudah ada di cache, tampilkan langsung
                     if (profileImage.getProgress() == 1.0 && !profileImage.isError()) {
                         profileCircle.setFill(new ImagePattern(profileImage));
                         profileInitialLabel.setVisible(false);
@@ -92,12 +85,10 @@ public class MainDashboardController implements Initializable {
                 }
             }
             
-            // Jika tidak ada path gambar, tampilkan inisial
             displayInitial(loggedInUser);
         }
     }
 
-    // --- METODE BANTUAN BARU UNTUK MENAMPILKAN INISIAL ---
     private void displayInitial(User user) {
         profileCircle.setFill(Color.web("#495057"));
         profileInitialLabel.setVisible(true);
@@ -108,47 +99,29 @@ public class MainDashboardController implements Initializable {
         }
     }
 
-    @FXML
-    private void handleLogoutAction() {
-        // ... (Tidak ada perubahan di sini)
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Konfirmasi Logout");
-        alert.setHeaderText("Anda akan keluar dari sesi ini.");
-        alert.setContentText("Apakah Anda yakin ingin logout?");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            UserSession.getInstance().clearSession();
-            try {
-                Stage currentStage = (Stage) logoutButton.getScene().getWindow();
-                currentStage.close();
-                Parent root = FXMLLoader.load(getClass().getResource("LoginView.fxml"));
-                Stage loginStage = new Stage();
-                loginStage.setTitle("Swapify - Login");
-                loginStage.setScene(new Scene(root));
-                loginStage.setMaximized(true);
-                loginStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    // --- METODE handleLogoutAction() DIHAPUS DARI SINI ---
 
     @FXML
     private void handleProfileAction(MouseEvent event) {
-        // ... (Tidak ada perubahan di sini)
         User loggedInUser = UserSession.getInstance().getLoggedInUser();
         if (loggedInUser != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("ProfileView.fxml"));
                 Parent root = loader.load();
+                
                 ProfileController profileController = loader.getController();
                 profileController.initData(loggedInUser, this);
+                
                 Stage profileStage = new Stage();
                 profileStage.setTitle("Profil Pengguna - " + loggedInUser.getNama());
-                profileStage.setScene(new Scene(root));
+                
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+                profileStage.setScene(scene);
+                
                 profileStage.setMaximized(true);
                 profileStage.showAndWait();
+                
                 loadItems();
                 setupProfileAvatar(); 
             } catch (IOException e) {
@@ -164,7 +137,6 @@ public class MainDashboardController implements Initializable {
     }
 
     private void loadItems() {
-        // ... (Tidak ada perubahan di sini)
         ObservableList<Item> availableItems = itemDAO.getAllAvailableItems();
         itemCatalogPane.getChildren().clear();
         for (Item item : availableItems) {
@@ -181,11 +153,15 @@ public class MainDashboardController implements Initializable {
     }
     
     private void showAlert(String title, String header, String content) {
-        // ... (Tidak ada perubahan di sini)
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(header);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    // --- METODE BARU UNTUK MEMBANTU PROSES LOGOUT DARI PROFIL ---
+    public Circle getProfileCircle() {
+        return profileCircle;
     }
 }

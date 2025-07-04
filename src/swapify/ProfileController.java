@@ -2,6 +2,7 @@ package swapify;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional; // <-- IMPORT BARU
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType; // <-- IMPORT BARU
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,22 +19,18 @@ import javafx.stage.Stage;
 
 public class ProfileController {
 
-    @FXML
-    private ImageView profileImageView;
-    @FXML
-    private Label namaLengkapLabel;
-    @FXML
-    private Label emailLabel;
-    @FXML
-    private Button editProfileButton;
-    @FXML
-    private Button tambahBarangButton;
-    @FXML
-    private TilePane myItemsPane;
-    @FXML
-    private Button backButton;
-    @FXML
-    private Button chatButton;
+    // --- DEKLARASI FXML BARU ---
+    @FXML private Button logoutButton;
+    
+    // Deklarasi yang sudah ada
+    @FXML private ImageView profileImageView;
+    @FXML private Label namaLengkapLabel;
+    @FXML private Label emailLabel;
+    @FXML private Button editProfileButton;
+    @FXML private Button tambahBarangButton;
+    @FXML private TilePane myItemsPane;
+    @FXML private Button backButton;
+    @FXML private Button chatButton;
 
     private UserDAO userDAO;
     private ItemDAO itemDAO;
@@ -146,7 +144,6 @@ public class ProfileController {
         }
     }
 
-    // --- METODE INI SEKARANG DIPERBARUI SEPENUHNYA ---
     @FXML
     private void handleBukaChatAction() {
         try {
@@ -155,16 +152,48 @@ public class ProfileController {
 
             Stage stage = new Stage();
             stage.setTitle("Ajuan & Chat Saya");
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+            stage.setScene(scene);
             stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Gagal membuka halaman chat.");
-            alert.showAndWait();
+        }
+    }
+
+    // --- LOGIKA LOGOUT SEKARANG ADA DI SINI ---
+    @FXML
+    private void handleLogoutAction() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Konfirmasi Logout");
+        alert.setHeaderText("Anda akan keluar dari sesi ini.");
+        alert.setContentText("Apakah Anda yakin ingin logout?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            UserSession.getInstance().clearSession();
+            try {
+                // Mendapatkan stage dari tombol back/logout untuk menutup jendela profil
+                Stage currentStage = (Stage) backButton.getScene().getWindow();
+                currentStage.close();
+                
+                // Menutup juga dashboard yang mungkin masih terbuka di belakang
+                if (dashboardController != null) {
+                    Stage dashboardStage = (Stage) dashboardController.getProfileCircle().getScene().getWindow();
+                    dashboardStage.close();
+                }
+
+                // Membuka kembali halaman login
+                Parent root = FXMLLoader.load(getClass().getResource("LoginView.fxml"));
+                Stage loginStage = new Stage();
+                loginStage.setTitle("Swapify - Login");
+                loginStage.setScene(new Scene(root));
+                loginStage.setMaximized(true);
+                loginStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

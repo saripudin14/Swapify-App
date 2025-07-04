@@ -14,11 +14,9 @@ import javafx.scene.layout.VBox;
 
 public class ChatController {
 
-    // --- DEKLARASI FXML BARU UNTUK TAB ---
+    // Deklarasi FXML
     @FXML private ListView<Proposal> activeConversationListView;
     @FXML private ListView<Proposal> historyConversationListView;
-
-    // Deklarasi FXML yang sudah ada
     @FXML private Button rejectButton;
     @FXML private Button acceptButton;
     @FXML private BorderPane chatAreaPane;
@@ -46,22 +44,16 @@ public class ChatController {
         this.itemDAO = new ItemDAO();
         this.currentUser = UserSession.getInstance().getLoggedInUser();
 
-        // Mengatur kedua ListView
         setupListView(activeConversationListView);
         setupListView(historyConversationListView);
         
-        // Memuat data untuk kedua tab
         loadAllConversations();
     }
     
-    /**
-     * Metode generik untuk mengatur sebuah ListView (baik aktif maupun riwayat).
-     */
     private void setupListView(ListView<Proposal> listView) {
         listView.setCellFactory(lv -> new ConversationListCell(currentUser));
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                // Saat item dipilih, pastikan item di list lain tidak terpilih
                 if (listView == activeConversationListView) {
                     historyConversationListView.getSelectionModel().clearSelection();
                 } else {
@@ -73,16 +65,11 @@ public class ChatController {
         });
     }
 
-    /**
-     * Memuat atau memuat ulang data untuk kedua tab.
-     */
     private void loadAllConversations() {
         if (currentUser != null) {
-            // true untuk mengambil ajuan 'Pending'
             ObservableList<Proposal> activeProposals = proposalDAO.getProposalsForUser(currentUser.getId(), true);
             activeConversationListView.setItems(activeProposals);
 
-            // false untuk mengambil ajuan 'Accepted' dan 'Rejected'
             ObservableList<Proposal> historyProposals = proposalDAO.getProposalsForUser(currentUser.getId(), false);
             historyConversationListView.setItems(historyProposals);
         }
@@ -98,10 +85,22 @@ public class ChatController {
         chatHeaderTitle.setText("Percakapan untuk: " + proposal.getOriginalItemName());
         updateStatusUI(proposal.getStatus());
         
-        // Tombol aksi hanya muncul untuk ajuan yang statusnya 'Pending'
-        boolean showActionButtons = "Pending".equals(proposal.getStatus()) && currentUser.getId() == proposal.getOwnerId();
+        boolean isPending = "Pending".equals(proposal.getStatus());
+        
+        // Tombol aksi hanya muncul untuk ajuan yang statusnya 'Pending' dan dilihat oleh pemilik
+        boolean showActionButtons = isPending && currentUser.getId() == proposal.getOwnerId();
         actionButtonsBox.setVisible(showActionButtons);
         actionButtonsBox.setManaged(showActionButtons);
+        
+        // --- LOGIKA BARU UNTUK MODE READ-ONLY ---
+        // Input pesan hanya aktif jika status proposal 'Pending'
+        messageField.setDisable(!isPending);
+        sendButton.setDisable(!isPending);
+        if (!isPending) {
+            messageField.setPromptText("Transaksi ini sudah selesai.");
+        } else {
+            messageField.setPromptText("Ketik pesan...");
+        }
         
         messageContainer.getChildren().clear();
 
@@ -220,18 +219,13 @@ public class ChatController {
         messageDAO.createMessage(sysMessage);
     }
     
-    /**
-     * Metode baru untuk me-refresh semua data setelah sebuah aksi (terima/tolak).
-     */
     private void refreshAfterAction() {
-        // Kosongkan area chat untuk mencegah error
         chatAreaPane.setTop(null);
         chatAreaPane.setCenter(placeholderLabel);
         chatAreaPane.setBottom(null);
         actionButtonsBox.setVisible(false);
         actionButtonsBox.setManaged(false);
         
-        // Muat ulang semua data di kedua tab
         loadAllConversations();
     }
     

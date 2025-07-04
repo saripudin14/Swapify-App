@@ -44,12 +44,17 @@
                </VBox.margin>
             </Label>
             <Label fx:id="emailLabel" text="email.pengguna@mail.com" style="-fx-text-fill: grey;" />
-            <Button fx:id="editProfileButton" mnemonicParsing="false" onAction="#handleEditProfile" style="-fx-cursor: hand;" text="Edit Profil">
+            
+            <HBox alignment="CENTER" spacing="10.0">
+               <children>
+                  <Button fx:id="editProfileButton" onAction="#handleEditProfile" styleClass="button-primary" text="Edit Profil" />
+                  <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogoutAction" style="-fx-background-color: #f8d7da; -fx-text-fill: #721c24; -fx-cursor: hand;" text="Logout" />
+               </children>
                <VBox.margin>
                   <Insets top="20.0" />
                </VBox.margin>
-            </Button>
-         </children>
+            </HBox>
+            </children>
          <padding>
             <Insets />
          </padding>
@@ -66,8 +71,7 @@
                      </font>
                   </Label>
                   <Region HBox.hgrow="ALWAYS" />
-
-                  <Button fx:id="chatButton" mnemonicParsing="false" onAction="#handleBukaChatAction" styleClass="button-secondary" text="✉️ Lihat Ajuan &amp; Chat" />
+                  <Button fx:id="chatButton" mnemonicParsing="false" onAction="#handleBukaChatAction" styleClass="chat-button" text="Lihat Ajuan &amp; Chat" />
                   <Button fx:id="tambahBarangButton" mnemonicParsing="false" onAction="#handleTambahBarangAction" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;" text="+ Tambah Barang Baru">
                      <font>
                         <Font name="System Bold" size="14.0" />

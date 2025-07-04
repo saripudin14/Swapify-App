@@ -31,7 +31,6 @@ public class ItemCardController {
     @FXML private HBox ownerControlsBox;
     @FXML private Button deleteButton;
     @FXML private Button editButton;
-    @FXML private Button markAsDoneButton;
 
     private Item currentItem;
     private ItemDAO itemDAO;
@@ -111,24 +110,6 @@ public class ItemCardController {
     
     public void setOnUpdateCallback(Runnable callback) {
         this.updateCallback = callback;
-    }
-
-    @FXML
-    private void handleMarkAsDoneAction() {
-        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmation.setTitle("Konfirmasi");
-        confirmation.setHeaderText("Tandai Barang sebagai Selesai");
-        confirmation.setContentText("Apakah Anda yakin ingin menyelesaikan transaksi untuk barang '" + currentItem.getNamaBarang() + "'? Barang ini akan disembunyikan dari daftar.");
-
-        Optional<ButtonType> result = confirmation.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            boolean success = itemDAO.updateItemStatus(currentItem.getId(), "Selesai");
-            if (success && updateCallback != null) {
-                updateCallback.run(); 
-            } else if (!success) {
-                showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal memperbarui status barang.");
-            }
-        }
     }
 
     @FXML
