@@ -34,23 +34,36 @@ public class ProposalDAO {
         }
     }
 
-    public ObservableList<Proposal> getProposalsForUser(int userId) {
+    // --- METODE INI SEKARANG DIPERBARUI TOTAL ---
+    /**
+     * Mengambil proposal untuk pengguna berdasarkan status yang diinginkan.
+     * @param userId ID pengguna yang sedang login.
+     * @param isActive true untuk mengambil ajuan aktif ('Pending'), false untuk riwayat ('Accepted', 'Rejected').
+     * @return Daftar proposal yang relevan.
+     */
+    public ObservableList<Proposal> getProposalsForUser(int userId, boolean isActive) {
         ObservableList<Proposal> proposals = FXCollections.observableArrayList();
-        String sql = "SELECT " +
-                     "p.*, " +
-                     "i.nama_barang, " +
-                     "i.gambar_path, " +
-                     "u_proposer.nama AS proposer_name, " +
-                     "u_owner.nama AS owner_name " +
-                     "FROM proposals p " +
-                     "JOIN items i ON p.item_id = i.id " +
-                     "JOIN users u_proposer ON p.proposer_id = u_proposer.id " +
-                     "JOIN users u_owner ON p.owner_id = u_owner.id " +
-                     "WHERE p.proposer_id = ? OR p.owner_id = ? " +
-                     "ORDER BY p.created_at DESC";
+        
+        // Membangun query SQL secara dinamis
+        StringBuilder sql = new StringBuilder(
+            "SELECT p.*, i.nama_barang, i.gambar_path, u_proposer.nama AS proposer_name, u_owner.nama AS owner_name " +
+            "FROM proposals p " +
+            "JOIN items i ON p.item_id = i.id " +
+            "JOIN users u_proposer ON p.proposer_id = u_proposer.id " +
+            "JOIN users u_owner ON p.owner_id = u_owner.id " +
+            "WHERE (p.proposer_id = ? OR p.owner_id = ?) "
+        );
+
+        if (isActive) {
+            sql.append("AND p.status = 'Pending' ");
+        } else {
+            sql.append("AND (p.status = 'Accepted' OR p.status = 'Rejected') ");
+        }
+        
+        sql.append("ORDER BY p.created_at DESC");
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
             
             pstmt.setInt(1, userId);
             pstmt.setInt(2, userId);

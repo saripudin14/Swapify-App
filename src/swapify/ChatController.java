@@ -14,10 +14,13 @@ import javafx.scene.layout.VBox;
 
 public class ChatController {
 
-    // Deklarasi FXML
+    // --- DEKLARASI FXML BARU UNTUK TAB ---
+    @FXML private ListView<Proposal> activeConversationListView;
+    @FXML private ListView<Proposal> historyConversationListView;
+
+    // Deklarasi FXML yang sudah ada
     @FXML private Button rejectButton;
     @FXML private Button acceptButton;
-    @FXML private ListView<Proposal> conversationListView;
     @FXML private BorderPane chatAreaPane;
     @FXML private Label placeholderLabel;
     @FXML private VBox chatInputContainer;
@@ -43,25 +46,45 @@ public class ChatController {
         this.itemDAO = new ItemDAO();
         this.currentUser = UserSession.getInstance().getLoggedInUser();
 
-        setupConversationList();
-        loadConversations();
+        // Mengatur kedua ListView
+        setupListView(activeConversationListView);
+        setupListView(historyConversationListView);
+        
+        // Memuat data untuk kedua tab
+        loadAllConversations();
     }
     
-    private void setupConversationList() {
-        conversationListView.setCellFactory(listView -> new ConversationListCell(currentUser));
-
-        conversationListView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+    /**
+     * Metode generik untuk mengatur sebuah ListView (baik aktif maupun riwayat).
+     */
+    private void setupListView(ListView<Proposal> listView) {
+        listView.setCellFactory(lv -> new ConversationListCell(currentUser));
+        listView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
+                // Saat item dipilih, pastikan item di list lain tidak terpilih
+                if (listView == activeConversationListView) {
+                    historyConversationListView.getSelectionModel().clearSelection();
+                } else {
+                    activeConversationListView.getSelectionModel().clearSelection();
+                }
                 selectedProposal = newSelection;
                 displayConversation(newSelection);
             }
         });
     }
 
-    private void loadConversations() {
+    /**
+     * Memuat atau memuat ulang data untuk kedua tab.
+     */
+    private void loadAllConversations() {
         if (currentUser != null) {
-            ObservableList<Proposal> proposals = proposalDAO.getProposalsForUser(currentUser.getId());
-            conversationListView.setItems(proposals);
+            // true untuk mengambil ajuan 'Pending'
+            ObservableList<Proposal> activeProposals = proposalDAO.getProposalsForUser(currentUser.getId(), true);
+            activeConversationListView.setItems(activeProposals);
+
+            // false untuk mengambil ajuan 'Accepted' dan 'Rejected'
+            ObservableList<Proposal> historyProposals = proposalDAO.getProposalsForUser(currentUser.getId(), false);
+            historyConversationListView.setItems(historyProposals);
         }
     }
 
@@ -75,6 +98,7 @@ public class ChatController {
         chatHeaderTitle.setText("Percakapan untuk: " + proposal.getOriginalItemName());
         updateStatusUI(proposal.getStatus());
         
+        // Tombol aksi hanya muncul untuk ajuan yang statusnya 'Pending'
         boolean showActionButtons = "Pending".equals(proposal.getStatus()) && currentUser.getId() == proposal.getOwnerId();
         actionButtonsBox.setVisible(showActionButtons);
         actionButtonsBox.setManaged(showActionButtons);
@@ -107,7 +131,6 @@ public class ChatController {
         messageLabel.setWrapText(true);
         messageLabel.setPadding(new Insets(8, 12, 8, 12));
         
-        // --- PERBAIKAN UTAMA ADA DI BLOK 'ELSE' DI BAWAH INI ---
         if (msg.isSystemMessage()) {
             messageWrapper.setAlignment(javafx.geometry.Pos.CENTER);
             messageLabel.setStyle("-fx-background-radius: 15; -fx-background-color: #e9ecef; -fx-text-fill: #495057; -fx-font-style: italic;");
@@ -116,7 +139,6 @@ public class ChatController {
             messageLabel.setStyle("-fx-background-radius: 15; -fx-background-color: #007bff; -fx-text-fill: white;");
         } else {
             messageWrapper.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
-            // Style untuk lawan bicara, pastikan ada background-color
             messageLabel.setStyle("-fx-background-radius: 15; -fx-background-color: #e9ecef; -fx-text-fill: black;");
         }
         
@@ -164,10 +186,9 @@ public class ChatController {
     @FXML
     private void handleRejectAction() {
         if (confirmAction("Tolak Ajuan", "Apakah Anda yakin ingin menolak ajuan ini? Aksi ini tidak dapat dibatalkan.")) {
-            boolean success = proposalDAO.updateProposalStatus(selectedProposal.getId(), "Rejected");
-            if(success) {
+            if (proposalDAO.updateProposalStatus(selectedProposal.getId(), "Rejected")) {
                 sendSystemMessage("Pengajuan telah ditolak oleh pemilik.");
-                refreshCurrentConversationState("Rejected");
+                refreshAfterAction();
             } else {
                 showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal memperbarui status ajuan.");
             }
@@ -176,13 +197,13 @@ public class ChatController {
 
     @FXML
     private void handleAcceptAction() {
-        if (confirmAction("Terima Ajuan", "Apakah Anda yakin ingin menerima ajuan ini? Barang ini akan ditandai sebagai 'Selesai' dan tidak akan terlihat lagi.")) {
+        if (confirmAction("Terima Ajuan", "Apakah Anda yakin ingin menerima ajuan ini? Barang ini akan ditandai sebagai 'Selesai'.")) {
             boolean proposalSuccess = proposalDAO.updateProposalStatus(selectedProposal.getId(), "Accepted");
             boolean itemSuccess = itemDAO.updateItemStatus(selectedProposal.getItemId(), "Selesai");
 
-            if(proposalSuccess && itemSuccess) {
+            if (proposalSuccess && itemSuccess) {
                 sendSystemMessage("Pengajuan telah diterima! Silakan lanjutkan transaksi secara pribadi.");
-                refreshCurrentConversationState("Accepted");
+                refreshAfterAction();
             } else {
                 showAlert(Alert.AlertType.ERROR, "Gagal", "Gagal menyelesaikan transaksi. Coba lagi.");
             }
@@ -192,19 +213,26 @@ public class ChatController {
     private void sendSystemMessage(String text) {
         Message sysMessage = new Message();
         sysMessage.setProposalId(selectedProposal.getId());
-        sysMessage.setSenderId(currentUser.getId()); 
+        sysMessage.setSenderId(currentUser.getId());
         sysMessage.setReceiverId(currentUser.getId());
         sysMessage.setMessageText(text);
         sysMessage.setSystemMessage(true);
         messageDAO.createMessage(sysMessage);
     }
     
-    private void refreshCurrentConversationState(String newStatus) {
+    /**
+     * Metode baru untuk me-refresh semua data setelah sebuah aksi (terima/tolak).
+     */
+    private void refreshAfterAction() {
+        // Kosongkan area chat untuk mencegah error
+        chatAreaPane.setTop(null);
+        chatAreaPane.setCenter(placeholderLabel);
+        chatAreaPane.setBottom(null);
         actionButtonsBox.setVisible(false);
         actionButtonsBox.setManaged(false);
-        updateStatusUI(newStatus);
-        displayConversation(selectedProposal);
-        loadConversations();
+        
+        // Muat ulang semua data di kedua tab
+        loadAllConversations();
     }
     
     private boolean confirmAction(String title, String content) {
