@@ -31,6 +31,8 @@ public class ProfileController {
     private TilePane myItemsPane;
     @FXML
     private Button backButton;
+    @FXML
+    private Button chatButton;
 
     private UserDAO userDAO;
     private ItemDAO itemDAO;
@@ -84,9 +86,6 @@ public class ProfileController {
             uploadStage.setTitle("Unggah Barang Baru");
             uploadStage.setScene(new Scene(root));
             
-            // --- PERUBAHAN DI SINI ---
-            // uploadStage.setMaximized(true); // Baris ini dihapus/dikomentari
-
             uploadStage.showAndWait();
             
             loadUserItems(currentUser.getId());
@@ -144,6 +143,28 @@ public class ProfileController {
             loadProfileImage(currentUser.getProfileImagePath());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // --- METODE INI SEKARANG DIPERBARUI SEPENUHNYA ---
+    @FXML
+    private void handleBukaChatAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ChatView.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Ajuan & Chat Saya");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Gagal membuka halaman chat.");
+            alert.showAndWait();
         }
     }
 }

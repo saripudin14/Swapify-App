@@ -66,6 +66,8 @@
                      </font>
                   </Label>
                   <Region HBox.hgrow="ALWAYS" />
+
+                  <Button fx:id="chatButton" mnemonicParsing="false" onAction="#handleBukaChatAction" styleClass="button-secondary" text="✉️ Lihat Ajuan &amp; Chat" />
                   <Button fx:id="tambahBarangButton" mnemonicParsing="false" onAction="#handleTambahBarangAction" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;" text="+ Tambah Barang Baru">
                      <font>
                         <Font name="System Bold" size="14.0" />

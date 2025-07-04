@@ -31,7 +31,7 @@
                         <ImageView fx:id="itemImageView" fitHeight="450.0" fitWidth="350.0" pickOnBounds="true" preserveRatio="true" />
                     </children>
                 </VBox>
-                <VBox spacing="20.0" GridPane.columnIndex="1">
+                <VBox spacing="15.0" GridPane.columnIndex="1">
                     <children>
                         <Label fx:id="namaBarangLabel" styleClass="detail-title" text="Nama Barang" wrapText="true" />
                         <HBox alignment="CENTER_LEFT" spacing="15.0" styleClass="detail-meta-info">
@@ -74,8 +74,17 @@
                                 <Font name="System Bold" size="16.0" />
                             </font>
                         </Label>
-                        <Label fx:id="deskripsiArea" styleClass="detail-description-text" text="Isi deskripsi..." wrapText="true" VBox.vgrow="ALWAYS" />
-                    </children>
+                        <Label fx:id="deskripsiArea" styleClass="detail-description-text" text="Isi deskripsi..." wrapText="true" />
+                        
+                        <HBox fx:id="proposalButtonBox" alignment="CENTER_LEFT">
+                           <children>
+                              <Button fx:id="proposalButton" mnemonicParsing="false" styleClass="button-primary" text="Memuat..." />
+                           </children>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </HBox>
+                        </children>
                     <padding>
                         <Insets left="10.0" />
                     </padding>

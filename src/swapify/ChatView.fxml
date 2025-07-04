@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="swapify.ChatController">
+   <children>
+      <SplitPane dividerPositions="0.35" layoutX="268.0" layoutY="220.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #e9ecef; -fx-border-width: 0 1 0 0;">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Label text="Daftar Ajuan &amp; Chat">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                           </padding>
+                        </Label>
+                        <ListView fx:id="conversationListView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+          <AnchorPane>
+               <children>
+                  <BorderPane fx:id="chatAreaPane" layoutX="155.0" layoutY="186.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <center>
+                        <Label fx:id="placeholderLabel" text="Pilih percakapan dari daftar di sebelah kiri untuk memulai." textAlignment="CENTER" wrapText="true">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </center>
+                     <bottom>
+                        <VBox fx:id="chatInputContainer" managed="false" visible="false" BorderPane.alignment="CENTER">
+                           <children>
+                              <HBox fx:id="actionButtonsBox" alignment="CENTER_RIGHT" managed="false" spacing="10.0" visible="false">
+                                 <padding>
+                                    <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                                 </padding>
+                                 <children>
+                                    <Button fx:id="rejectButton" mnemonicParsing="false" onAction="#handleRejectAction" style="-fx-background-color: #dc3545;" text="Tolak Ajuan" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="acceptButton" mnemonicParsing="false" onAction="#handleAcceptAction" style="-fx-background-color: #28a745;" text="Terima Ajuan" textFill="WHITE">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-border-color: #e9ecef; -fx-border-width: 1 0 0 0;">
+                                 <children>
+                                    <TextField fx:id="messageField" onAction="#handleSendMessage" promptText="Ketik pesan..." styleClass="form-control" HBox.hgrow="ALWAYS" />
+                                    <Button fx:id="sendButton" mnemonicParsing="false" onAction="#handleSendMessage" styleClass="button-primary" text="Kirim" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </bottom>
+                     <top>
+                        <HBox fx:id="chatHeaderBox" alignment="CENTER_LEFT" managed="false" spacing="15.0" style="-fx-border-color: #e9ecef; -fx-border-width: 0 0 1 0; -fx-background-color: #ffffff;" visible="false" BorderPane.alignment="CENTER">
+                           <children>
+                              <Label fx:id="chatHeaderTitle" styleClass="section-title" text="Detail Percakapan">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Region HBox.hgrow="ALWAYS" />
+                              <Label fx:id="chatHeaderStatus" styleClass="tag" text="Status" />
+                           </children>
+                           <padding>
+                              <Insets bottom="12.0" left="15.0" right="15.0" top="12.0" />
+                           </padding>
+                        </HBox>
+                     </top>
+                     <center>
+                        <ScrollPane fx:id="messageScrollPane" fitToWidth="true" hbarPolicy="NEVER" pannable="true" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+                           <content>
+                              <VBox fx:id="messageContainer" spacing="10.0">
+                                 <padding>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </padding>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                     </center>
+                  </BorderPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
