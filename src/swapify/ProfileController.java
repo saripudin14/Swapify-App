@@ -2,7 +2,7 @@ package swapify;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional; // <-- IMPORT BARU
+import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,20 +10,17 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType; // <-- IMPORT BARU
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.TilePane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class ProfileController {
 
-    // --- DEKLARASI FXML BARU ---
     @FXML private Button logoutButton;
-    
-    // Deklarasi yang sudah ada
-    @FXML private ImageView profileImageView;
     @FXML private Label namaLengkapLabel;
     @FXML private Label emailLabel;
     @FXML private Button editProfileButton;
@@ -32,14 +29,22 @@ public class ProfileController {
     @FXML private Button backButton;
     @FXML private Button chatButton;
 
+    // --- FXML Fields Diperbarui ---
+    @FXML private Circle profileCircle;
+    @FXML private Label profileInitialLabel;
+
+
     private UserDAO userDAO;
-    private ItemDAO itemDAO;
+    private ItemDAO itemDAO; // Deklarasi sudah benar
     private User currentUser;
     private MainDashboardController dashboardController;
 
     public ProfileController() {
         userDAO = new UserDAO();
-        itemDAO = new ItemDAO();
+        // --- PERBAIKAN DI SINI ---
+        // Sebelumnya: itemDAO = new itemDAO(); (Salah)
+        // Seharusnya:
+        itemDAO = new ItemDAO(); // (Benar, dengan 'I' besar)
     }
 
     public void initData(User user, MainDashboardController controller) {
@@ -48,23 +53,34 @@ public class ProfileController {
         if (currentUser != null) {
             namaLengkapLabel.setText(currentUser.getNama());
             emailLabel.setText(currentUser.getEmail());
-            loadProfileImage(currentUser.getProfileImagePath());
+            setupProfileAvatar(); // Panggil metode baru
             loadUserItems(currentUser.getId());
         }
     }
-    
-    private void loadProfileImage(String imagePath) {
+
+    private void setupProfileAvatar() {
+        String imagePath = currentUser.getProfileImagePath();
+
         if (imagePath != null && !imagePath.isEmpty()) {
             File imageFile = new File(imagePath);
             if (imageFile.exists()) {
-                Image image = new Image(imageFile.toURI().toString());
-                profileImageView.setImage(image);
-            } else {
-                System.err.println("File gambar profil tidak ditemukan di: " + imagePath);
-                profileImageView.setImage(null);
+                javafx.scene.image.Image profileImage = new javafx.scene.image.Image(imageFile.toURI().toString());
+                profileCircle.setFill(new ImagePattern(profileImage));
+                profileInitialLabel.setVisible(false);
+                return;
             }
+        }
+        
+        displayInitial();
+    }
+    
+    private void displayInitial() {
+        profileCircle.setFill(Color.web("#495057"));
+        profileInitialLabel.setVisible(true);
+        if (currentUser.getNama() != null && !currentUser.getNama().isEmpty()) {
+            profileInitialLabel.setText(currentUser.getNama().substring(0, 1).toUpperCase());
         } else {
-            profileImageView.setImage(null);
+            profileInitialLabel.setText("?");
         }
     }
 
@@ -137,8 +153,10 @@ public class ProfileController {
             editStage.setScene(new Scene(root));
             editStage.showAndWait();
 
+            this.currentUser = UserSession.getInstance().getLoggedInUser();
             namaLengkapLabel.setText(currentUser.getNama());
-            loadProfileImage(currentUser.getProfileImagePath());
+            setupProfileAvatar();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -161,8 +179,7 @@ public class ProfileController {
             e.printStackTrace();
         }
     }
-
-    // --- LOGIKA LOGOUT SEKARANG ADA DI SINI ---
+    
     @FXML
     private void handleLogoutAction() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -174,17 +191,14 @@ public class ProfileController {
         if (result.isPresent() && result.get() == ButtonType.OK) {
             UserSession.getInstance().clearSession();
             try {
-                // Mendapatkan stage dari tombol back/logout untuk menutup jendela profil
                 Stage currentStage = (Stage) backButton.getScene().getWindow();
                 currentStage.close();
                 
-                // Menutup juga dashboard yang mungkin masih terbuka di belakang
                 if (dashboardController != null) {
                     Stage dashboardStage = (Stage) dashboardController.getProfileCircle().getScene().getWindow();
                     dashboardStage.close();
                 }
 
-                // Membuka kembali halaman login
                 Parent root = FXMLLoader.load(getClass().getResource("LoginView.fxml"));
                 Stage loginStage = new Stage();
                 loginStage.setTitle("Swapify - Login");

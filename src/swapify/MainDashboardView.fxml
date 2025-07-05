@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
@@ -37,11 +39,21 @@
                               <Label fx:id="profileInitialLabel" style="-fx-text-fill: #f8f9fa; -fx-font-weight: bold; -fx-font-size: 18px;" text="P" />
                            </children>
                         </StackPane>
-                        
                      </children>
                   </HBox>
                </right>
                
+               <center>
+                  <HBox alignment="CENTER" maxWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <TextField fx:id="searchField" promptText="Cari barang..." styleClass="header-control" HBox.hgrow="ALWAYS" />
+						<ComboBox fx:id="categoryFilterComboBox" prefWidth="200.0" promptText="Semua Kategori" styleClass="header-control" />
+                     </children>
+                     <BorderPane.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </BorderPane.margin>
+                  </HBox>
+               </center>
             </BorderPane>
          </top>
 

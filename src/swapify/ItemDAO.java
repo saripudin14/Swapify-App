@@ -4,20 +4,51 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class ItemDAO {
 
-    public ObservableList<Item> getAllAvailableItems() {
+    /**
+     * Metode baru yang lebih fleksibel untuk mencari dan memfilter barang.
+     * @param keyword Kata kunci untuk mencari nama barang (bisa null atau kosong).
+     * @param category Kategori untuk filter (bisa null atau "Semua Kategori").
+     * @return Daftar barang yang sesuai dengan kriteria.
+     */
+    public ObservableList<Item> getFilteredItems(String keyword, String category) {
         ObservableList<Item> itemList = FXCollections.observableArrayList();
-        String sql = "SELECT i.*, u.nama as nama_uploader FROM items i JOIN users u ON i.user_id = u.id WHERE i.status = 'Tersedia' ORDER BY i.created_at DESC";
+        
+        // Query dasar untuk mengambil semua item yang tersedia
+        StringBuilder sql = new StringBuilder(
+            "SELECT i.*, u.nama as nama_uploader FROM items i " +
+            "JOIN users u ON i.user_id = u.id WHERE i.status = 'Tersedia' "
+        );
+
+        // Menambahkan kondisi filter secara dinamis
+        boolean keywordExists = keyword != null && !keyword.trim().isEmpty();
+        boolean categoryExists = category != null && !category.equals("Semua Kategori");
+
+        if (keywordExists) {
+            sql.append("AND i.nama_barang LIKE ? ");
+        }
+        if (categoryExists) {
+            sql.append("AND i.kategori = ? ");
+        }
+        
+        sql.append("ORDER BY i.created_at DESC");
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
-             ResultSet rs = pstmt.executeQuery()) {
+             PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
 
+            int paramIndex = 1;
+            if (keywordExists) {
+                pstmt.setString(paramIndex++, "%" + keyword + "%");
+            }
+            if (categoryExists) {
+                pstmt.setString(paramIndex++, category);
+            }
+
+            ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Item item = new Item(
                     rs.getInt("id"),
@@ -38,6 +69,17 @@ public class ItemDAO {
             e.printStackTrace();
         }
         return itemList;
+    }
+    
+    // ... sisa metode di ItemDAO (addItem, getItemsByUserId, dll.) tetap sama ...
+    // Pastikan untuk tidak menghapus metode lainnya.
+    // Kode ini hanya menggantikan metode getAllAvailableItems().
+    // Untuk lebih mudah, kamu bisa hapus metode getAllAvailableItems() yang lama 
+    // dan tambahkan metode getFilteredItems() di atasnya.
+    
+    // Metode lama yang bisa kamu hapus atau ganti
+    public ObservableList<Item> getAllAvailableItems() {
+        return getFilteredItems("", "Semua Kategori"); // Sekarang memanggil metode baru
     }
     
     public boolean addItem(String namaBarang, String deskripsi, String kategori, String jenisTransaksi, String gambarPath, int userId) {
@@ -163,4 +205,5 @@ public class ItemDAO {
             return false;
         }
     }
+
 }

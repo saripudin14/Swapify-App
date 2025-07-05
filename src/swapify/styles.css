@@ -373,3 +373,95 @@
 }
 .button-danger:hover { -fx-background-color: #c82333; }
 .button-danger:pressed { -fx-background-color: #bd2130; -fx-effect: none; }
+
+/* =================================================================== */
+/* Gaya Kontrol di Header (Pencarian & Filter)                       */
+/* =================================================================== */
+
+/* Gaya Umum untuk TextField dan ComboBox di Header */
+.header-control {
+    -fx-background-color: #495057; /* Warna latar abu-abu gelap */
+    -fx-font-size: 13px;
+    -fx-border-width: 1px;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 7px 12px;
+}
+
+/* Gaya khusus untuk TextField Pencarian */
+.header-control.text-field {
+    -fx-text-fill: #f8f9fa;        /* Warna teks input putih */
+    -fx-prompt-text-fill: #adb5bd; /* Warna placeholder "Cari barang..." */
+}
+
+/* Gaya khusus untuk ComboBox Filter */
+.header-control.combo-box .list-cell {
+    -fx-text-fill: #f8f9fa; /* WARNA TEKS UTAMA (YANG DIPILIH) JADI PUTIH */
+}
+
+/* Gaya saat kursor berada di atas kontrol */
+.header-control:hover {
+    -fx-background-color: #5c636a;
+}
+
+/* Gaya saat kontrol di-klik (fokus) */
+.header-control:focused {
+    -fx-background-color: #495057;
+    -fx-border-color: #80bdff; /* Border biru untuk menandakan fokus */
+    -fx-effect: dropshadow(gaussian, rgba(0, 123, 255, 0.35), 5, 0, 0, 0);
+}
+
+/* Mengatur panah pada ComboBox */
+.header-control .arrow {
+    -fx-background-color: #dee2e6; /* Warna panah dibuat lebih terang */
+    -fx-padding: 4px;
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* Bentuk segitiga ke bawah */
+}
+
+/* =================================================================== */
+/* Gaya Dropdown List pada ComboBox                                  */
+/* =================================================================== */
+
+.combo-box-popup .list-view {
+    -fx-background-color: #343a40; /* Latar dropdown gelap */
+    -fx-border-color: #6c757d;
+    -fx-border-width: 1px;
+}
+
+.combo-box-popup .list-cell {
+    -fx-text-fill: #f8f9fa; /* Teks item di dalam dropdown */
+    -fx-background-color: transparent;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 13px;
+}
+
+/* Gaya saat item di dropdown dipilih atau di-hover */
+.combo-box-popup .list-cell:hover,
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #007bff; /* Latar biru saat item dipilih */
+    -fx-text-fill: white;
+}
+/* =================================================================== */
+/* Gaya Dropdown List pada ComboBox                                  */
+/* =================================================================== */
+
+.combo-box-popup .list-view {
+    -fx-background-color: #343a40; /* Latar dropdown gelap */
+    -fx-border-color: #6c757d;
+    -fx-border-width: 1px;
+}
+
+.combo-box-popup .list-cell {
+    -fx-text-fill: #f8f9fa; /* Teks item di dalam dropdown */
+    -fx-background-color: transparent;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 13px;
+}
+
+/* Gaya saat item di dropdown dipilih atau di-hover */
+.combo-box-popup .list-cell:hover,
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #007bff; /* Latar biru saat item dipilih */
+    -fx-text-fill: white;
+}

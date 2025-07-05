@@ -3,8 +3,8 @@ package swapify;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,8 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox; // <-- IMPORT BARU
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -27,32 +26,71 @@ import javafx.stage.Stage;
 
 public class MainDashboardController implements Initializable {
 
-    @FXML
-    private TilePane itemCatalogPane;
-    @FXML
-    private TextField searchField;
-    // Tombol logout dihapus dari sini
-    @FXML
-    private StackPane profileButtonContainer;
-    @FXML
-    private Circle profileCircle;
-    @FXML
-    private Label profileInitialLabel;
+    @FXML private TilePane itemCatalogPane;
+    @FXML private TextField searchField;
+    @FXML private StackPane profileButtonContainer;
+    @FXML private Circle profileCircle;
+    @FXML private Label profileInitialLabel;
+    
+    // --- FXML BARU UNTUK FILTER ---
+    @FXML private ComboBox<String> categoryFilterComboBox;
 
     private ItemDAO itemDAO;
-    private UserDAO userDAO;
 
     public MainDashboardController() {
         itemDAO = new ItemDAO();
-        userDAO = new UserDAO();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loadItems();
         setupProfileAvatar();
+        setupFilters(); // <-- Panggil metode setup baru
+        loadItems();
     }
+    
+    // --- METODE BARU UNTUK SETUP FILTER ---
+    private void setupFilters() {
+        // Isi ComboBox dengan kategori
+        ObservableList<String> categories = FXCollections.observableArrayList(
+            "Semua Kategori", "Pakaian", "Buku", "Alat Rumah Tangga", "Elektronik", "Lainnya"
+        );
+        categoryFilterComboBox.setItems(categories);
+        categoryFilterComboBox.setValue("Semua Kategori"); // Nilai default
 
+        // Tambahkan listener ke kolom pencarian dan ComboBox
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> loadItems());
+        categoryFilterComboBox.valueProperty().addListener((obs, oldVal, newVal) -> loadItems());
+    }
+    
+    // --- PERBARUI METODE loadItems() MENJADI SEPERTI INI ---
+    private void loadItems() {
+        String keyword = searchField.getText();
+        String category = categoryFilterComboBox.getValue();
+
+        // Panggil metode DAO yang sudah kita perbarui
+        ObservableList<Item> items = itemDAO.getFilteredItems(keyword, category);
+        
+        itemCatalogPane.getChildren().clear();
+        for (Item item : items) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemCard.fxml"));
+                Parent itemCardNode = loader.load();
+                ItemCardController itemCardController = loader.getController();
+                itemCardController.setData(item);
+                itemCatalogPane.getChildren().add(itemCardNode);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    // --- Sisa kode di controller ini tetap sama ---
+    // (setupProfileAvatar, handleProfileAction, dll.)
+    
+    public void refreshItems() {
+        loadItems();
+    }
+    
     private void setupProfileAvatar() {
         User loggedInUser = UserSession.getInstance().getLoggedInUser();
         if (loggedInUser != null) {
@@ -98,9 +136,7 @@ public class MainDashboardController implements Initializable {
             profileInitialLabel.setText("?");
         }
     }
-
-    // --- METODE handleLogoutAction() DIHAPUS DARI SINI ---
-
+    
     @FXML
     private void handleProfileAction(MouseEvent event) {
         User loggedInUser = UserSession.getInstance().getLoggedInUser();
@@ -131,26 +167,6 @@ public class MainDashboardController implements Initializable {
             showAlert("Error", "Sesi Tidak Ditemukan", "Tidak dapat menemukan data pengguna yang login.");
         }
     }
-
-    public void refreshItems() {
-        loadItems();
-    }
-
-    private void loadItems() {
-        ObservableList<Item> availableItems = itemDAO.getAllAvailableItems();
-        itemCatalogPane.getChildren().clear();
-        for (Item item : availableItems) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("ItemCard.fxml"));
-                Parent itemCardNode = loader.load();
-                ItemCardController itemCardController = loader.getController();
-                itemCardController.setData(item);
-                itemCatalogPane.getChildren().add(itemCardNode);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
     
     private void showAlert(String title, String header, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -160,7 +176,6 @@ public class MainDashboardController implements Initializable {
         alert.showAndWait();
     }
 
-    // --- METODE BARU UNTUK MEMBANTU PROSES LOGOUT DARI PROFIL ---
     public Circle getProfileCircle() {
         return profileCircle;
     }

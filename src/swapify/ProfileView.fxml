@@ -4,10 +4,10 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Circle?>
@@ -26,14 +26,15 @@
                </VBox.margin>
             </HBox>
             
-            <ImageView fx:id="profileImageView" fitHeight="120.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
-               <clip>
-                  <Circle radius="60" centerX="60" centerY="60" />
-               </clip>
+            <StackPane>
+               <children>
+                  <Circle fx:id="profileCircle" radius="60.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                  <Label fx:id="profileInitialLabel" style="-fx-font-size: 48px; -fx-font-weight: bold; -fx-text-fill: white;" text="K" />
+               </children>
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin>
-            </ImageView>
+            </StackPane>
             
             <Label fx:id="namaLengkapLabel" text="Nama Lengkap Pengguna">
                <font>
@@ -48,7 +49,6 @@
             <HBox alignment="CENTER" spacing="10.0">
                <children>
                   <Button fx:id="editProfileButton" onAction="#handleEditProfile" styleClass="button-primary" text="Edit Profil" />
-                  
                   <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#handleLogoutAction" styleClass="button-logout" text="Logout" />
                </children>
                <VBox.margin>

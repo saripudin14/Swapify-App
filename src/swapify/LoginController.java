@@ -40,18 +40,30 @@ public class LoginController {
             showAlert(Alert.AlertType.INFORMATION, "Berhasil", "Login sukses! Selamat datang, " + loggedInUser.getNama() + ".");
             
             try {
+                // Menutup jendela login
                 Stage loginStage = (Stage) emailField.getScene().getWindow();
                 loginStage.close();
 
+                // Membuka jendela dashboard
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("MainDashboardView.fxml"));
                 Parent root = loader.load();
                 Stage dashboardStage = new Stage();
                 dashboardStage.setTitle("Swapify - Beranda");
-                dashboardStage.setScene(new Scene(root));
                 
-                // --- PERUBAHAN DI SINI ---
+                // ================================================================
+                // === PERUBAHAN UTAMA YANG MEMPERBAIKI MASALAH ADA DI SINI ===
+                // ================================================================
+                // 1. Buat Scene baru
+                Scene scene = new Scene(root);
+                
+                // 2. Hubungkan file "styles.css" ke Scene tersebut
+                scene.getStylesheets().add(getClass().getResource("styles.css").toExternalForm());
+                
+                // 3. Pasang Scene yang sudah memiliki style ke Jendela (Stage)
+                dashboardStage.setScene(scene);
+                // ================================================================
+                
                 dashboardStage.setMaximized(true); // Memaksimalkan jendela dashboard
-                
                 dashboardStage.show();
 
             } catch (IOException e) {
@@ -71,10 +83,7 @@ public class LoginController {
             Stage registerStage = new Stage();
             registerStage.setTitle("Registrasi Akun Baru");
             registerStage.setScene(new Scene(root));
-            
-            // --- PERUBAHAN DI SINI ---
-            registerStage.setMaximized(true); // Memaksimalkan jendela registrasi
-            
+            registerStage.setMaximized(true);
             registerStage.showAndWait();
         } catch (IOException e) {
             e.printStackTrace();

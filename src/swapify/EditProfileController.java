@@ -4,35 +4,31 @@ import java.io.File;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class EditProfileController {
 
-    // --- FXML Fields Baru ---
-    @FXML
-    private ImageView profileImageView;
-    @FXML
-    private Button pilihFotoButton;
-
-    @FXML
-    private TextField namaField;
-    @FXML
-    private PasswordField passwordBaruField;
-    @FXML
-    private PasswordField konfirmasiPasswordField;
-    @FXML
-    private Button batalButton;
-    @FXML
-    private Button simpanButton;
+    // --- FXML Fields Diperbarui ---
+    @FXML private Circle profileCircle;
+    @FXML private Label profileInitialLabel;
+    @FXML private Button pilihFotoButton;
+    @FXML private TextField namaField;
+    @FXML private PasswordField passwordBaruField;
+    @FXML private PasswordField konfirmasiPasswordField;
+    @FXML private Button batalButton;
+    @FXML private Button simpanButton;
 
     private UserDAO userDAO;
     private User currentUser;
-    private File selectedImageFile; // Untuk menyimpan file gambar yang dipilih
+    private File selectedImageFile;
 
     public EditProfileController() {
         userDAO = new UserDAO();
@@ -42,12 +38,34 @@ public class EditProfileController {
         this.currentUser = user;
         if (currentUser != null) {
             namaField.setText(currentUser.getNama());
-            // Tampilkan foto profil yang sudah ada
-            loadProfileImage(currentUser.getProfileImagePath());
+            setupProfileAvatar(); // Panggil metode untuk setup avatar
         }
     }
 
-    // --- METODE BARU UNTUK MEMILIH FOTO ---
+    private void setupProfileAvatar() {
+        String imagePath = currentUser.getProfileImagePath();
+        if (imagePath != null && !imagePath.isEmpty()) {
+            File imageFile = new File(imagePath);
+            if (imageFile.exists()) {
+                Image image = new Image(imageFile.toURI().toString());
+                profileCircle.setFill(new ImagePattern(image));
+                profileInitialLabel.setVisible(false);
+                return;
+            }
+        }
+        displayInitial();
+    }
+
+    private void displayInitial() {
+        profileCircle.setFill(Color.web("#495057")); // Warna latar default
+        profileInitialLabel.setVisible(true);
+        if (currentUser.getNama() != null && !currentUser.getNama().isEmpty()) {
+            profileInitialLabel.setText(currentUser.getNama().substring(0, 1).toUpperCase());
+        } else {
+            profileInitialLabel.setText("?");
+        }
+    }
+
     @FXML
     private void handlePilihFotoAction() {
         FileChooser fileChooser = new FileChooser();
@@ -59,14 +77,14 @@ public class EditProfileController {
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) {
-            // Simpan file yang dipilih dan tampilkan sebagai preview
             selectedImageFile = file;
             Image image = new Image(file.toURI().toString());
-            profileImageView.setImage(image);
+            // Tampilkan pratinjau di avatar
+            profileCircle.setFill(new ImagePattern(image));
+            profileInitialLabel.setVisible(false);
         }
     }
 
-    // --- METODE SIMPAN DIPERBARUI TOTAL ---
     @FXML
     private void handleSimpanAction() {
         String namaBaru = namaField.getText();
@@ -78,24 +96,19 @@ public class EditProfileController {
             return;
         }
 
-        if (!passwordBaru.isEmpty() || !konfirmasiPassword.isEmpty()) {
-            if (!passwordBaru.equals(konfirmasiPassword)) {
-                showAlert(Alert.AlertType.ERROR, "Kesalahan Password", "Kolom 'Kata Sandi Baru' dan 'Konfirmasi Sandi Baru' tidak cocok.");
-                return;
-            }
+        if (!passwordBaru.isEmpty() && !passwordBaru.equals(konfirmasiPassword)) {
+            showAlert(Alert.AlertType.ERROR, "Kesalahan Password", "Kolom kata sandi tidak cocok.");
+            return;
         }
 
-        // Tentukan path gambar yang akan disimpan
-        String newProfileImagePath = currentUser.getProfileImagePath(); // Path lama sebagai default
+        String newProfileImagePath = currentUser.getProfileImagePath();
         if (selectedImageFile != null) {
-            newProfileImagePath = selectedImageFile.getAbsolutePath(); // Jika ada file baru, gunakan path baru
+            newProfileImagePath = selectedImageFile.getAbsolutePath();
         }
         
-        // Memanggil metode updateUserProfile yang sudah kita perbarui di UserDAO
         boolean success = userDAO.updateUserProfile(currentUser.getId(), namaBaru, passwordBaru, newProfileImagePath);
 
         if (success) {
-            // Perbarui juga objek currentUser di sesi
             currentUser.setNama(namaBaru);
             currentUser.setProfileImagePath(newProfileImagePath);
             if (passwordBaru != null && !passwordBaru.isEmpty()) {
@@ -114,24 +127,11 @@ public class EditProfileController {
     private void handleBatalAction() {
         closeWindow();
     }
-    
-    // Metode bantuan untuk memuat gambar
-    private void loadProfileImage(String imagePath) {
-        if (imagePath != null && !imagePath.isEmpty()) {
-            File imageFile = new File(imagePath);
-            if (imageFile.exists()) {
-                Image image = new Image(imageFile.toURI().toString());
-                profileImageView.setImage(image);
-            }
-        }
-    }
 
     private void closeWindow() {
         Stage stage = (Stage) batalButton.getScene().getWindow();
         stage.close();
     }
-
-
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
         Alert alert = new Alert(alertType);
